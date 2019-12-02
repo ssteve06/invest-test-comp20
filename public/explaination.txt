@@ -1,0 +1,2 @@
+
+This Public File is for any data/code that will be displayed publicly on the web such as the css file and the javascript.
