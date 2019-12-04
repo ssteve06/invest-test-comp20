@@ -23,7 +23,7 @@
     </div>
     <p>The symbol:</p>
     <p id="symbol"></p>
-    <h2>The closing Price is:</h2>
+    <h2>The Latest Price is:</h2>
     <h2 id="closing_price"></h2>
     <h2>Total Amount of Stock:</h2>
     <h2 id="total"><h2>
@@ -44,11 +44,13 @@
 				const json = await response.json();
 				console.log(json);
 
+				var latest_price = json.latestPrice;
+				console.log("latest price = " + latest_price);
 				var closing_price = json.close;
 				var comp_name = json.companyName;
 
 				stocks.push(comp_name);
-				prices.push(parseInt(closing_price));
+				prices.push(parseInt(latest_price));
 				quants.push(parseInt(quantity));
 
 				var txt = "<h2> Your Stocks:</h2>" + " <table border='1'>";
@@ -69,8 +71,7 @@
 				var n = num.toFixed(2);
 				document.getElementById("total").innerHTML = "$"+n;
 
-			}
-		
+			}	
 	</script>
 
 </body>

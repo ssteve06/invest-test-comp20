@@ -2,12 +2,16 @@
 //Using Express Framework
 const express = require("express");
 const fetch = require("node-fetch");
-
 const app = express();
+var path = require('path');
 
 
 app.listen(3000, ()=> console.log("Listening at 3000..."));
 app.use(express.static("public"));
+
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname + '/public/app.html'));
+});
 
 app.get('/stock/:sym', async (req,res) => {
 	const sym = req.params.sym; 
@@ -17,4 +21,3 @@ app.get('/stock/:sym', async (req,res) => {
 	const json = await fetch_response.json();
 	res.json(json);
 });
-

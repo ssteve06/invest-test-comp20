@@ -13,6 +13,16 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "mongodb": "^3.3.5",
     "node-fetch": "^2.6.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jtak01/investing.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jtak01/investing/issues"
+  },
+  "homepage": "https://github.com/jtak01/investing#readme"
 }
