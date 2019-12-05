@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="App_style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<title>First APP</title>
 </head>
 <body>
@@ -23,15 +24,35 @@
     </div>
     <p>The symbol:</p>
     <p id="symbol"></p>
-    <h2>The Latest Price is:</h2>
+    <h2>The closing Price is:</h2>
     <h2 id="closing_price"></h2>
     <h2>Total Amount of Stock:</h2>
     <h2 id="total"><h2>
     <div id="stock_info"> </div>
+
 	<script>
+
 			var stocks = [];
 			var prices =[];
 			var quants = [];
+
+			//Checks if a company is already in the stocks array
+			function checkCompany(company){
+				var num = -1;
+				if(stocks.length > 0){
+					for(x in stocks){
+						if(company == stocks[x]){
+							num = x;
+							return num;
+						}
+					}
+				}
+				else{
+					return -1;
+				}
+				return -1;
+			}
+
 			async function myFunction(){
 			    var sym = document.getElementById("stonk").value; 
 				var quantity = document.getElementById("quant").value;
@@ -44,34 +65,48 @@
 				const json = await response.json();
 				console.log(json);
 
-				var latest_price = json.latestPrice;
-				console.log("latest price = " + latest_price);
 				var closing_price = json.close;
 				var comp_name = json.companyName;
 
-				stocks.push(comp_name);
-				prices.push(parseInt(latest_price));
-				quants.push(parseInt(quantity));
+				var check = checkCompany(comp_name);
 
+				//This check makes sure that you only update the quantity of stock
+				//if you add more stock of the same company, not create a new row
+
+   		        	if(check == -1){
+					stocks.push(comp_name);
+					prices.push(parseInt(closing_price));
+					quants.push(parseInt(quantity));
+				}
+
+
+				else{
+   		        		quants[check] = quants[check]+parseInt(quantity);
+   		      	 	}
+
+   		       		 
 				var txt = "<h2> Your Stocks:</h2>" + " <table border='1'>";
-   			    txt += "<tr><th>Stock</th><th>Price</th><th>Quantity</th></tr>";
-   			    var total_stocks = 0.0;
-   			    var total_price = 0.0;
-   		        for (x in stocks) {
-   		        	txt += "<tr><td>" + stocks[x] + "</td><td>" + prices[x]+ "</td><td>" + quants[x]+ "</td></tr>";
-   		        	total_stocks += quants[x];
-   		        	total_price += prices[x];
-   				}
+   			  	txt += "<tr><th>Stock</th><th>Price</th><th>Quantity</th></tr>";
+   			  	var total_stocks = 0.0;
+   			  	var total_price = 0.0;
+
+   		       		 for (x in stocks) {
+   		        		txt += "<tr><td>" + stocks[x] + "</td><td>" + prices[x]+ "</td><td>" + quants[x]+ "</td></tr>";
+   		        		total_stocks += quants[x];
+   		        		total_price += prices[x];
+   		       		 }
+   				
+
    				txt += "<tr><td>" + "Total:" + "</td><td>" + total_price + "</td><td>" + total_stocks + "</td></tr>";
    		 		txt += "</table>";    
-   			    document.getElementById("stock_info").innerHTML = txt;
+   			   	document.getElementById("stock_info").innerHTML = txt;
 
 				document.getElementById("closing_price").innerHTML = "$"+closing_price;
 				var num = closing_price*quantity;
 				var n = num.toFixed(2);
 				document.getElementById("total").innerHTML = "$"+n;
-
-			}	
+			}
+		
 	</script>
 
 </body>
