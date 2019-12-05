@@ -6,7 +6,10 @@ const app = express();
 var path = require('path');
 
 
-app.listen(3000, ()=> console.log("Listening at 3000..."));
+app.listen(process.env.PORT || 3000, function(){
+    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+  });
+
 app.use(express.static("public"));
 
 app.get('/', function(req, res) {
