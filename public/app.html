@@ -65,7 +65,7 @@
 				const json = await response.json();
 				console.log(json);
 
-				var closing_price = json.close;
+				var latestPrice = json.latestPrice;
 				var comp_name = json.companyName;
 
 				var check = checkCompany(comp_name);
@@ -75,7 +75,7 @@
 
    		        	if(check == -1){
 					stocks.push(comp_name);
-					prices.push(parseInt(closing_price));
+					prices.push(parseInt(latestPrice));
 					quants.push(parseInt(quantity));
 				}
 
@@ -101,8 +101,8 @@
    		 		txt += "</table>";    
    			   	document.getElementById("stock_info").innerHTML = txt;
 
-				document.getElementById("closing_price").innerHTML = "$"+closing_price;
-				var num = closing_price*quantity;
+				document.getElementById("closing_price").innerHTML = "$"+latestPrice;
+				var num = latestPrice*quantity;
 				var n = num.toFixed(2);
 				document.getElementById("total").innerHTML = "$"+n;
 			}
