@@ -82,8 +82,8 @@
 
 				else{
    		        		quants[check] = quants[check]+parseInt(quantity);
-   		      	 	}
-
+					quantity = quants[check]; //This line updates the total closing stock value
+				}				  
    		       		 
 				var txt = "<h2> Your Stocks:</h2>" + " <table border='1'>";
    			  	txt += "<tr><th>Stock</th><th>Price</th><th>Quantity</th></tr>";
