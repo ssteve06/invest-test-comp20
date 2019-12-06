@@ -24,3 +24,10 @@ app.get('/stock/:sym', async (req,res) => {
 	const json = await fetch_response.json();
 	res.json(json);
 });
+
+app.post('/login', function(req,res){
+    const username = req.param.username;
+    const password = req.param.password;
+    console.log("Username: " +username);
+    console.log("Password: " +password);
+});
