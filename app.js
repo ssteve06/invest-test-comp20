@@ -4,6 +4,9 @@ const express = require("express");
 const fetch = require("node-fetch");
 const app = express();
 var path = require('path');
+var bodyParser = require('body-parser');
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.listen(process.env.PORT || 3000, function(){
@@ -13,7 +16,7 @@ app.listen(process.env.PORT || 3000, function(){
 app.use(express.static("public"));
 
 app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname + '/public/app.html'));
+    res.sendFile(path.join(__dirname + '/public/login.html'));
 });
 
 app.get('/stock/:sym', async (req,res) => {
@@ -26,8 +29,14 @@ app.get('/stock/:sym', async (req,res) => {
 });
 
 app.post('/login', function(req,res){
-    const username = req.param.username;
-    const password = req.param.password;
-    console.log("Username: " +username);
-    console.log("Password: " +password);
+	const username = req.body.username;
+    const password = req.body.password;
+    console.log("Username: " + username);
+	console.log("Password: " + password);
+	res.send('/public/app.html')
+	
 });
+
+app.get('/login_suc', function(req, res){
+	res.send(path.join(__dirname + '/public/app.html'));
+})
