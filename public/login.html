@@ -17,9 +17,22 @@
         }
 
         function Submit(){
-            alert($("#username").contents())
-            console.log($("#username").contents());
-        };
+            $.post("/login",
+            {
+                username: $("#username").val(),
+                password: $("#password").val()
+            },
+                function(data, status){
+                    console.log(status)
+                    
+                    if(status == 'success'){
+                        console.log("Here")
+                        $.get('/login_suc', function(data,status){
+                            $(document).html(data);
+                        })
+                    };
+            });
+        }
     </script>
 
 </head>
