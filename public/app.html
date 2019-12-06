@@ -25,7 +25,7 @@
     <p>The symbol:</p>
     <p id="symbol"></p>
     <h2>The closing Price is:</h2>
-    <h2 id="closing_price"></h2>
+    <h2 id="latestPrice"></h2>
     <h2>Total Amount of Stock:</h2>
     <h2 id="total"><h2>
     <div id="stock_info"> </div>
@@ -101,7 +101,7 @@
    		 		txt += "</table>";    
    			   	document.getElementById("stock_info").innerHTML = txt;
 
-				document.getElementById("closing_price").innerHTML = "$"+latestPrice;
+				document.getElementById("latestPrice").innerHTML = "$"+latestPrice;
 				var num = latestPrice*quantity;
 				var n = num.toFixed(2);
 				document.getElementById("total").innerHTML = "$"+n;
