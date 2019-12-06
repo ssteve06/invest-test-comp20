@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://127.0.0.1:27017'
-const dbName = 'game-of-thrones'
+const dbName = 'test'
 let db
 
 MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
@@ -21,13 +21,11 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
   console.log(`Connected MongoDB: ${url}`)
   console.log(`Database: ${dbName}`)
 
-  var doc = { name: "Roshan", age: "22" };
-
-  db.collection("users").insertOne(doc, function(err, res) {
+  db.createCollection("users", function(err, res) {
     if (err) throw err;
-    console.log("Document inserted");
-    // close the connection to db when you are done with it
-    db.close();
+    console.log("Collection 'users' created!!!");
+    //db.close();
+  });
 
 });
 
@@ -54,14 +52,26 @@ app.get('/stock/:sym', async (req,res) => {
 });
 
 app.post('/login', function(req,res){
-	const username = req.body.username;
+    const username = req.body.username;
     const password = req.body.password;
-    console.log("Username: " + username);
-	console.log("Password: " + password);
-	res.send('/public/app.html')
-	
+    //console.log("Username: " + username);
+    //console.log("Password: " + password);
+    res.send('/public/app.html');
+
+    var doc = { username: "mramer01", password: "password" };
+
+
+    db.collection("users").insertOne(doc, function(err, res) {
+        if (err) throw err;
+        console.log(doc);
+        // close the connection to db when you are done with it
+        //db.close();
+    });
 });
 
 app.get('/login_suc', function(req, res){
-	res.send(path.join(__dirname + '/public/app.html'));
+    res.send(path.join(__dirname + '/public/app.html'));
 })
+
+
+
