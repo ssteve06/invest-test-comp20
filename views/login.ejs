@@ -50,13 +50,11 @@
     <input type="password" name="password" id="password">
     <button type="submit">Login</button>
     </form>
-    <% if (message.success != '' && message.success != null) { %>
+    <% if (message.logged_in == 'true') { %>
         <div class="message"><%= message.success %></div>
     <% } else { %>
         <div class="message"><%= message.fail %></div>
     <% } %>
-
-
 </body>
 
 </html>

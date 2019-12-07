@@ -45,15 +45,25 @@ app.post('/login', function(req,res){
 	
 	// validate username and password 
 	req.flash('success', 'Registration successfully');
-	req.flash('fail', 'Incorrect Username or Password')
-	res.locals.message = req.flash();
+	req.flash('fail', 'Incorrect Username or Password');
 	if(username == "app"){
-		res.render('app.ejs');
+		req.flash('logged_in', 'true')
+		res.redirect(307, '/app')
 	}
 	else{
+		req.flash('logged_in', 'false')
+		res.locals.message = req.flash();
 		res.render('login.ejs');
 	}
+});
 
+app.post('/app', function(req, res) {
+	var message = req.flash('logged_in');
+	console.log(message);
+	if(message == 'true')
+		res.render('app.ejs')
+	else
+		console.log("fail")
 });
 
 app.get('/login_suc', function(req, res){
