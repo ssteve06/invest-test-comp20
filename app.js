@@ -5,9 +5,14 @@ const fetch = require("node-fetch");
 const app = express();
 var path = require('path');
 var bodyParser = require('body-parser');
+var flash    = require('connect-flash');
+var session      = require('express-session');
+
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.set('public engine', 'ejs'); // set up ejs for templating;
+app.use(flash());
+app.use(session({ secret: 'webprogrammingcomp20' }));
 
 app.listen(process.env.PORT || 3000, function(){
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
@@ -15,8 +20,12 @@ app.listen(process.env.PORT || 3000, function(){
 
 app.use(express.static("public"));
 
+var signupMessage = "helllooelreol"
+
 app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname + '/public/login.html'));
+	req.flash('success');
+	res.locals.message = req.flash();
+	res.render('login.ejs')
 });
 
 app.get('/stock/:sym', async (req,res) => {
@@ -33,10 +42,20 @@ app.post('/login', function(req,res){
     const password = req.body.password;
     console.log("Username: " + username);
 	console.log("Password: " + password);
-	res.send('/public/app.html')
 	
+	// validate username and password 
+	req.flash('success', 'Registration successfully');
+	req.flash('fail', 'Incorrect Username or Password')
+	res.locals.message = req.flash();
+	if(true && false){
+		res.render('app.ejs');
+	}
+	else{
+		res.render('login.ejs');
+	}
+
 });
 
 app.get('/login_suc', function(req, res){
-	res.send(path.join(__dirname + '/public/app.html'));
+	res.render('app.ejs')
 })
