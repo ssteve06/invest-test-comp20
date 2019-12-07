@@ -47,7 +47,7 @@ app.post('/login', function(req,res){
 	req.flash('success', 'Registration successfully');
 	req.flash('fail', 'Incorrect Username or Password')
 	res.locals.message = req.flash();
-	if(true && false){
+	if(username == "app"){
 		res.render('app.ejs');
 	}
 	else{
