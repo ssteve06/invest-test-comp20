@@ -52,8 +52,10 @@ app.get('/stock/:sym', async (req,res) => {
 	const sym = req.params.sym;
 });
 
+/*############ MAX - send stock data to proper username and password #########*/
+
 app.post('/stock/:sym', async(req, res) => {
-	const sym = req.params.sym; 
+	const sym = req.params.sym;
 
 	console.log(sym);
 	const api_url = 'https://cloud.iexapis.com/stable/stock/'+sym+'/quote?token=pk_065b1600526c4ad5b953052a98fa7070';
@@ -64,12 +66,13 @@ app.post('/stock/:sym', async(req, res) => {
 	console.log("quanted wanted: " + quant)
 });
 
+/*############Jun - login validation (username and password) -- check if username and password exist ####*/
+
 app.post('/login', function(req,res){
     const username = req.body.username;
     const password = req.body.password;
     //console.log("Username: " + username);
     //console.log("Password: " + password);
-    //res.send('/public/app.html');
 
 
   console.log("Username: " + username);
