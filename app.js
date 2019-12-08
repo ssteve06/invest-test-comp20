@@ -81,7 +81,7 @@ app.post('/login', function(req,res){
 	if(username == "app"){
 		req.flash('logged_in', 'true')
 		req.flash('username', username);
-		//res.redirect(307, '/app')
+		res.redirect(307, '/app')
 	}
 	else {
 		req.flash('logged_in', 'false')
@@ -101,8 +101,6 @@ app.post('/login', function(req,res){
     db.collection("users").insertOne(doc, function(err, res) {
         if (err) throw err;
         console.log(doc);
-        // close the connection to db when you are done with it
-        //db.close();
     });
   });
 });

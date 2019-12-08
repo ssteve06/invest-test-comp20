@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="App_style.css" />
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lobster|Poiret+One&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <title>First APP</title>
@@ -44,20 +45,21 @@
 
 </head>
 
-<body>
+<body id="loginBody">
 
     <h1 class="loginHeader">Stock Investment Simulator</h1>
 
-    <p class="pls">Please log in.</p>
+    <p class="pls">Please sign in.</p>
 
-
-    <form action="/login" method="POST">
-        <input type="user" name="username" id="username" placeholder="Username">
-        <br>
-        <input type="password" name="password" id="password" placeholder="Password">
-        <br>
-        <button type="submit" id="loginButton">Login</button>
-    </form>
+    <div id="loginForm">
+        <form action="/login" method="POST">
+            <input type="user" name="username" id="username" placeholder="Username">
+            <br>
+            <input type="password" name="password" id="password" placeholder="Password">
+            <br>
+            <button type="submit" id="loginButton">Sign In</button>
+        </form>
+    </div>
     <% if (message.logged_in == 'true') { %>
     <div class="message"><%= message.success %></div>
     <% } else { %>

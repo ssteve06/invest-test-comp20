@@ -1,1 +1,1 @@
-Comp20 Final Project: Spotify Web App
+Comp20 Final Project: Stock Investment Simulator
