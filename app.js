@@ -17,21 +17,19 @@ const url = "mongodb+srv://demo_admin:comp20@democluster-atdke.mongodb.net/test?
 const dbName = 'test'
 let db
 
-MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
-  if (err) return console.log(err)
+  MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
+    if (err) return console.log(err)
 
-  // Storing a reference to the database so you can use it later
-  db = client.db(dbName)
-  console.log(`Connected MongoDB: ${url}`)
-  console.log(`Database: ${dbName}`)
+    // Storing a reference to the database so you can use it later
+    db = client.db(dbName)
+    console.log(`Connected MongoDB: ${url}`)
+    console.log(`Database: ${dbName}`)
 
-  db.createCollection("users", function(err, res) {
-    if (err) throw err;
-    console.log("Collection 'users' created!!!");
-    //db.close();
+    db.createCollection("users", function(err, res) {
+      if (err) throw err;
+      console.log("Collection 'users' created!!!");
+    });
   });
-
-});
 
 app.set('public engine', 'ejs'); // set up ejs for templating;
 app.use(flash());
@@ -52,6 +50,7 @@ app.get('/', function(req, res) {
 
 app.get('/stock/:sym', async (req,res) => {
 	const sym = req.params.sym;
+});
 
 app.post('/stock/:sym', async(req, res) => {
 	const sym = req.params.sym; 
@@ -63,7 +62,7 @@ app.post('/stock/:sym', async(req, res) => {
 	res.json(json);
 	const quant = req.body['quant']
 	console.log("quanted wanted: " + quant)
-})
+});
 
 app.post('/login', function(req,res){
     const username = req.body.username;
@@ -71,21 +70,6 @@ app.post('/login', function(req,res){
     //console.log("Username: " + username);
     //console.log("Password: " + password);
     res.send('/public/app.html');
-
-    var doc = { username: "mramer01", password: "password" };
-
-
-    /*db.collection("users").insertOne(doc, function(err, res) {
-        if (err) throw err;
-        console.log(doc);*/
-        // close the connection to db when you are done with it
-        //db.close();
-    });
-});
-
-app.get('/login_suc', function(req, res) {
-    res.send(path.join(__dirname + '/public/app.html'));
-})
 
 
   console.log("Username: " + username);
@@ -97,13 +81,30 @@ app.get('/login_suc', function(req, res) {
 	if(username == "app"){
 		req.flash('logged_in', 'true')
 		req.flash('username', username);
-		res.redirect(307, '/app')
+		//res.redirect(307, '/app')
 	}
 	else {
 		req.flash('logged_in', 'false')
 		res.locals.message = req.flash();
 		res.render('login.ejs');
 	}
+
+
+  MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
+      if (err) return console.log(err)
+
+    // Storing a reference to the database so you can use it later
+    db = client.db(dbName)
+
+    var doc = { username: username, password: password };
+
+    db.collection("users").insertOne(doc, function(err, res) {
+        if (err) throw err;
+        console.log(doc);
+        // close the connection to db when you are done with it
+        //db.close();
+    });
+  });
 });
 
 app.post('/app', function(req, res) {
@@ -114,6 +115,6 @@ app.post('/app', function(req, res) {
 		console.log("fail")
 });
 
-app.get('/login_suc', function(req, res){
+app.get('/login_suc', function(req, res) {
 	res.render('app.ejs')
-})
+});
