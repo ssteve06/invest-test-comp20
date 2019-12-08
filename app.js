@@ -69,7 +69,7 @@ app.post('/login', function(req,res){
     const password = req.body.password;
     //console.log("Username: " + username);
     //console.log("Password: " + password);
-    res.send('/public/app.html');
+    //res.send('/public/app.html');
 
 
   console.log("Username: " + username);
