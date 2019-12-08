@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="App_style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<title>First APP</title>
+</head>
+<body>
+
+	<header>Stock Investment Simulator App</header>
+
+	<p>Hello!</p>
+	<div id="wrap">
+		 Enter Stock Symbol:<br>
+        	 <input type="text" id="stonk" name="stock" value="aapl">
+        	 <br>
+        	 Enter Number of Stocks:<br>
+         	<input type="text" id="quant" name="number" value="">
+         	<br>
+         	<button onclick="myFunction()">Submit</button>	
+	</div>
+    	<p>The symbol:</p>
+	<p id="symbol"></p>
+	<div id = "combined">
+    		<h3>The latest price is:</h3>
+    		<h3 id="latestPrice"></h3>
+    		<h3>Total Amount of Stock:</h3>
+    		<h3 id="total"><h3>
+    		<div id="stock_info"> </div>
+	</div>
+	<script>
+
+			var stocks = [];
+			var prices =[];
+			var quants = [];
+
+			//Checks if a company is already in the stocks array
+			function checkCompany(company){
+				var num = -1;
+				if(stocks.length > 0){
+					for(x in stocks){
+						if(company == stocks[x]){
+							num = x;
+							return num;
+						}
+					}
+				}
+				else{
+					return -1;
+				}
+				return -1;
+			}
+
+			async function myFunction(){
+			    var sym = document.getElementById("stonk").value; 
+				var quantity = document.getElementById("quant").value;
+				console.log(sym);
+				document.getElementById("symbol").innerHTML=sym;
+
+				const api_url = '/stock/'+sym;
+				data = {"quant": quantity}
+
+				const response = await fetch(api_url, {
+					method: "POST",
+					headers: {
+    				'Content-Type': 'application/json'
+  					},
+					body: JSON.stringify(data)
+				});
+				const json = await response.json();
+				console.log(json);
+				
+
+				var latestPrice = json.latestPrice;
+				var comp_name = json.companyName;
+
+				var check = checkCompany(comp_name);
+
+				//This check makes sure that you only update the quantity of stock
+				//if you add more stock of the same company, not create a new row
+
+   		        	if(check == -1){
+					stocks.push(comp_name);
+					prices.push(parseInt(latestPrice));
+					quants.push(parseInt(quantity));
+				}
+
+
+				else{
+   		        		quants[check] = quants[check]+parseInt(quantity);
+					quantity = quants[check]; //This line updates the total closing stock value
+				}				  
+   		       		 
+				var txt = "<h2> Your Stocks:</h2>" + " <table border='1'>";
+   			  	txt += "<tr><th>Stock</th><th>Price</th><th>Quantity</th></tr>";
+   			  	var total_stocks = 0.0;
+   			  	var total_price = 0.0;
+
+   		       		 for (x in stocks) {
+   		        		txt += "<tr><td>" + stocks[x] + "</td><td>" + prices[x]+ "</td><td>" + quants[x]+ "</td></tr>";
+   		        		total_stocks += quants[x];
+   		        		total_price += prices[x];
+   		       		 }
+   				
+
+   				txt += "<tr><td>" + "Total:" + "</td><td>" + total_price + "</td><td>" + total_stocks + "</td></tr>";
+   		 		txt += "</table>";    
+   			   	document.getElementById("stock_info").innerHTML = txt;
+
+				document.getElementById("latestPrice").innerHTML = "$"+latestPrice;
+				var num = latestPrice*quantity;
+				var n = num.toFixed(2);
+				document.getElementById("total").innerHTML = "$"+n;
+			}
+		
+	</script>
+
+</body>
+</html>
