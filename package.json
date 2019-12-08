@@ -16,7 +16,7 @@
     "express": "^4.17.1",
     "mongodb": "^3.3.5",
     "mongoose-promised": "^0.1.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
     "ejs": "~2.5.2",
     "connect-flash": "~0.1.1",
     "express-session": "~1.14.1"

@@ -12,7 +12,8 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://127.0.0.1:27017'
+const url = "mongodb+srv://demo_admin:comp20@democluster-atdke.mongodb.net/test?retryWrites=true&w=majority";
+//const url = 'mongodb://127.0.0.1:27017'
 const dbName = 'test'
 let db
 
@@ -74,9 +75,9 @@ app.post('/login', function(req,res){
     var doc = { username: "mramer01", password: "password" };
 
 
-    db.collection("users").insertOne(doc, function(err, res) {
+    /*db.collection("users").insertOne(doc, function(err, res) {
         if (err) throw err;
-        console.log(doc);
+        console.log(doc);*/
         // close the connection to db when you are done with it
         //db.close();
     });
