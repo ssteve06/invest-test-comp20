@@ -20,7 +20,6 @@ app.listen(process.env.PORT || 3000, function(){
 
 app.use(express.static("public"));
 
-var signupMessage = "helllooelreol"
 
 app.get('/', function(req, res) {
 	req.flash('success');
@@ -28,14 +27,16 @@ app.get('/', function(req, res) {
 	res.render('login.ejs')
 });
 
-app.get('/stock/:sym', async (req,res) => {
+app.post('/stock/:sym', async(req, res) => {
 	const sym = req.params.sym; 
 	console.log(sym);
 	const api_url = 'https://cloud.iexapis.com/stable/stock/'+sym+'/quote?token=pk_065b1600526c4ad5b953052a98fa7070';
 	const fetch_response = await fetch(api_url);
 	const json = await fetch_response.json();
 	res.json(json);
-});
+	const quant = req.body['quant']
+	console.log("quanted wanted: " + quant)
+})
 
 app.post('/login', function(req,res){
 	const username = req.body.username;
@@ -48,6 +49,7 @@ app.post('/login', function(req,res){
 	req.flash('fail', 'Incorrect Username or Password');
 	if(username == "app"){
 		req.flash('logged_in', 'true')
+		req.flash('username', username);
 		res.redirect(307, '/app')
 	}
 	else{
@@ -59,7 +61,6 @@ app.post('/login', function(req,res){
 
 app.post('/app', function(req, res) {
 	var message = req.flash('logged_in');
-	console.log(message);
 	if(message == 'true')
 		res.render('app.ejs')
 	else
