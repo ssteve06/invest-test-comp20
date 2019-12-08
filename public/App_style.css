@@ -144,6 +144,21 @@ th {
 	border-radius: 4px;
 }
 
+#signupButton {
+	display: block;
+	margin: auto;
+	width: 390px;
+	height: 64px;
+	font-family: 'Noto Sans', sans-serif;
+	font-size: 17px;
+	background: linear-gradient(#42a1ec, #0070c9);
+	color: #fff;
+	cursor: pointer;
+	border: 1px solid #07c;
+	border-radius: 4px;
+	
+}
+
 #loginButton:hover {
 	background: linear-gradient(#4ba3e7, #1176c9);
 }

@@ -69,7 +69,6 @@ app.post('/login', function(req,res){
     const password = req.body.password;
     //console.log("Username: " + username);
     //console.log("Password: " + password);
-    //res.send('/public/app.html');
 
 
   console.log("Username: " + username);
@@ -101,6 +100,7 @@ app.post('/login', function(req,res){
     db.collection("users").insertOne(doc, function(err, res) {
         if (err) throw err;
         console.log(doc);
+        // close the connection to db when you are done with it
     });
   });
 });
@@ -116,3 +116,7 @@ app.post('/app', function(req, res) {
 app.get('/login_suc', function(req, res) {
 	res.render('app.ejs')
 });
+
+app.get('/newuser', function(req, res){
+	res.render('signup.ejs');
+})
