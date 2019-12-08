@@ -23,14 +23,13 @@
                 password: $("#password").val()
             },
                 function(data, status){
-                    console.log(status)
+                   // $(document).html(data);
+                    //$(document).html("this");
+                    console.log(data)
                     
-                    if(status == 'success'){
-                        console.log("Here")
-                        $.get('/login_suc', function(data,status){
-                            $(document).html(data);
-                        })
-                    };
+                    $(window).html(data)
+                    console.log(status)
+                    //console.log("data:" + data)
             });
         }
     </script>
