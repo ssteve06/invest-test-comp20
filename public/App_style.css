@@ -107,7 +107,6 @@ th {
 	font-size: 30px;
 	font-style: italic;
 	font-family: 'Poiret One', cursive;
-	color: #fff;
 }
 
 .pls {
@@ -115,7 +114,6 @@ th {
 	top: 80px;
 	font-style: normal;
 	font-family: 'Noto Sans', sans-serif;
-	color: #fff;
 }
 
 #username,
@@ -168,7 +166,7 @@ th {
 }
 
 #loginBody {
-	background-image: url(loginBG.jpg);
+	background-image: url(BG3.jpg);
 	background-repeat: no-repeat;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
