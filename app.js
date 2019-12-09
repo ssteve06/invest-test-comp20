@@ -47,6 +47,10 @@ app.get('/', function(req, res) {
 
 app.get('/stock/:sym', async (req,res) => {
 	const sym = req.params.sym;
+
+
+	//db.collection(username).findOne()
+
 });
 
 /*############ MAX - send stock data to proper username and password #########*/
@@ -56,14 +60,11 @@ app.post('/stock/:sym', async(req, res) => {
 
 	console.log(sym);
 	const api_url = 'https://cloud.iexapis.com/stable/stock/'+sym+'/quote?token=pk_065b1600526c4ad5b953052a98fa7070';
-	const fetch_response = await fetch(api_url)
+	const fetch_response = await fetch(api_url);
 	const json = await fetch_response.json();
 
 	res.json(json);
-	const quant = req.body['quant']
-	console.log("quanted wanted: " + quant)
-
-	console.log("symbol: " + json.symbol + "  |  quantity: " + quant);
+	const quant = req.body['quant'];
 
 	var myquery = { "id": counter - 1 };
   	var newvalues = { $addToSet: { "stocks":
@@ -86,7 +87,7 @@ app.post('/login', function(req,res) {
     const password = req.body.password;
 
 
-  console.log("Username: " + username);
+  	console.log("Username: " + username);
 	console.log("Password: " + password);
 	
 	// validate username and password 
@@ -115,7 +116,6 @@ app.post('/login', function(req,res) {
         if (err) throw err;
         console.log(user);
     });
-  //});
 });
 
 app.post('/app', function(req, res) {
