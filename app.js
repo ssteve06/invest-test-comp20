@@ -151,7 +151,7 @@ app.get('/newuser', function(req, res) {
     var counter = 0;
 	res.render('signup.ejs');
 
-    console.log(req);
+    //console.log(req.body);
 
     /*username = req.body.username;
     const password = req.body.password;*/
