@@ -114,7 +114,6 @@ app.post('/login', function(req,res) {
 /*############Jun - login validation (username and password) -- check if username and password exist ####*/
     const password = req.body.password;
 
-
   	console.log("Username: " + username);
 	console.log("Password: " + password);
 
