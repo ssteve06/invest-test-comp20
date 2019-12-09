@@ -108,8 +108,8 @@ app.post('/login', function(req,res) {
 /*############Jun - login validation (username and password) -- check if username and password exist ####*/
     const password = req.body.password;
 
-  	console.log("Username: " + username);
-	console.log("Password: " + password);
+    console.log("Username: " + username);
+    console.log("Password: " + password);
 
     var counter = 0;
 
@@ -117,21 +117,41 @@ app.post('/login', function(req,res) {
     req.flash('fail', 'Incorrect Username or Password');
     db.listCollections().toArray(function(err, collInfos)
     {
-        console.log(collInfos[0].name);
+        // only sends user to main page when password and username is correct
+        // DOES NOT yet display "invalid username and password" when incorrect
         var exists = false;
         for (i = 0; i < collInfos.length && !exists; i++) {
             if (collInfos[i].name == username) {
-                req.flash('logged_in', 'true')
-                req.flash('username', username);
-                res.redirect(307, '/app');
-                exists = true;
+                var query = {"password": password};
+                var doc = checkExists(db, username, query);
+                doc.then(function(value) {
+                    if (value != 0 && value[0].password == password) {
+                        req.flash('logged_in', 'true')
+                        req.flash('username', username);
+                        res.redirect(307, '/app');
+                        console.log("password correct");
+                        exists = true;
+                    }
+                });
             }
         }
+/*        if (!exists) {
+            req.flash('logged_in', 'false')
+            res.locals.message = req.flash();
+            res.render('login.ejs');
+        }*/
+
+        /*if (collInfos[i].name == username) {
+            req.flash('logged_in', 'true')
+            req.flash('username', username);
+            res.redirect(307, '/app');
+            exists = true;
+        }
         if (!exists) {
-                req.flash('logged_in', 'false')
-                res.locals.message = req.flash();
-                res.render('login.ejs');
-            }
+            req.flash('logged_in', 'false')
+            res.locals.message = req.flash();
+            res.render('login.ejs');
+        }*/
     });
 });
 
