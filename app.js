@@ -17,6 +17,8 @@ const url = "mongodb+srv://demo_admin:comp20@democluster-atdke.mongodb.net/test?
 const dbName = 'test'
 let db
 
+var username;
+
   MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
     if (err) return console.log(err)
 
@@ -24,11 +26,6 @@ let db
     db = client.db(dbName)
     console.log(`Connected MongoDB: ${url}`)
     console.log(`Database: ${dbName}`)
-
-    db.createCollection("users", function(err, res) {
-      if (err) throw err;
-      console.log("Collection 'users' created!!!");
-    });
   });
 
 app.set('public engine', 'ejs'); // set up ejs for templating;
@@ -59,13 +56,47 @@ app.post('/stock/:sym', async(req, res) => {
 	const api_url = 'https://cloud.iexapis.com/stable/stock/'+sym+'/quote?token=pk_065b1600526c4ad5b953052a98fa7070';
 	const fetch_response = await fetch(api_url)
 	const json = await fetch_response.json();
+
+	 MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
+      	if (err) return console.log(err)
+    	db = client.db(dbName);
+	});
+
+	/*var doc = { "username": username, "password": password, "stocks": 
+    		[
+	    		{
+	    			"symbol": "aapl",
+	    			"price": 125.50,
+	    			"quantity": 5
+	    		},
+	    		{
+	    			"symbol": "dis",
+	    			"price": 75.50,
+	    			"quantity": 10
+	    		}
+    		]
+    };*/
+
 	res.json(json);
 	const quant = req.body['quant']
 	console.log("quanted wanted: " + quant)
+
+	// TESTING PURPOSES ONLY
+	username = "mramer01";
+
+	db.username.update(
+    	{ _id: 1 },
+   		{ $addToSet: {
+   			"symbol": json.companyName,
+   			"latestPrice": json.latestPrice,
+   			"quantity": quant
+   			}
+   		}
+    );
 });
 
-app.post('/login', function(req,res){
-    const username = req.body.username;
+app.post('/login', function(req,res) {
+    username = req.body.username;
     const password = req.body.password;
     //console.log("Username: " + username);
     //console.log("Password: " + password);
@@ -78,7 +109,7 @@ app.post('/login', function(req,res){
 	// validate username and password 
 	req.flash('success', 'Registration successfully');
 	req.flash('fail', 'Incorrect Username or Password');
-	if(username == "app"){
+	if(username == "mramer01") {
 		req.flash('logged_in', 'true')
 		req.flash('username', username);
 		res.redirect(307, '/app')
@@ -89,18 +120,21 @@ app.post('/login', function(req,res){
 		res.render('login.ejs');
 	}
 
-
   MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
       if (err) return console.log(err)
-
-    // Storing a reference to the database so you can use it later
     db = client.db(dbName)
 
-    var doc = { username: username, password: password };
 
-    db.collection("users").insertOne(doc, function(err, res) {
+	db.createCollection(username, function(err, res) {
+      if (err) throw err;
+      console.log("Collection 'users' created!!!");
+    });
+
+    var user = {"password": password, "stocks": []};
+    // create new collection ofr new user
+    db.collection(username).insertOne(user, function(err, res) {
         if (err) throw err;
-        console.log(doc);
+        console.log(user);
     });
   });
 });
