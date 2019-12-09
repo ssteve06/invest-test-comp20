@@ -18,28 +18,22 @@
     </style>
 
 </head>
+
 <body id="loginBody">
+
     <h1 class="loginHeader">Stock Investment Simulator</h1>
 
-    <p class="pls">Please sign in.</p>
+    <p class="pls">Please make an account</p>
 
     <div id="loginForm">
-        <form action="/login" method="POST">
+        <form action="/new_user" method="POST">
             <input type="user" name="username" id="username" placeholder="Username">
             <br>
             <input type="password" name="password" id="password" placeholder="Password">
             <br>
-            <button type="submit" id="loginButton">Sign In</button>
-        </form>
-        <form action="/newuser" method="GET">
-            <button type="submit" id="signupButton">Sign up</button>
+            <button type="submit" id="loginButton">Sign up</button>
         </form>
     </div>
-    <% if (message.logged_in == 'true') { %>
-    <div class="message"><%= message.success %></div>
-    <% } else { %>
-    <div class="message"><%= message.fail %></div>
-    <% } %>
 </body>
 
 </html>
