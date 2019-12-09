@@ -38,22 +38,22 @@ app.listen(process.env.PORT || 3000, function(){
 
 
 function checkExists(db, collection, query) {
-        return new Promise((resolve, reject) => {
-            db.collection(username).find(query, { $exists: true }).toArray(function (err, doc) //find if a value exists
+    return new Promise((resolve, reject) => {
+        db.collection(username).find(query, { $exists: true }).toArray(function (err, doc) //find if a value exists
+        {
+            if (doc && doc.length) //if it does
             {
-                if (doc && doc.length) //if it does
-                {
-                    //console.log(doc); // print out what it sends back
-                    resolve(doc);
-                }
-                else // if it does not 
-                {
-                    console.log("Not in docs");
-                    resolve(0);
-                }
-            });
+                //console.log(doc); // print out what it sends back
+                resolve(doc);
+            }
+            else // if it does not 
+            {
+                console.log("Not in docs");
+                resolve(0);
+            }
         });
-    }
+    });
+}
 
 app.use(express.static("public"));
 
@@ -66,7 +66,6 @@ app.get('/', function(req, res) {
 
 app.get('/stock/:sym', async (req,res) => {
 	const sym = req.params.sym;
-
 });
 
 app.post('/stock/:sym', async(req, res) => {
@@ -89,11 +88,11 @@ app.post('/stock/:sym', async(req, res) => {
         if (value == 0) {
             // inserts new stock if doesn't exist
             db.collection(username).insertOne(
-                    {
-                        "symbol": json.symbol,
-                        "latestPrice":  json.latestPrice,
-                        "quantity": quant
-                    }
+                {
+                    "symbol": json.symbol,
+                    "latestPrice":  json.latestPrice,
+                    "quantity": quant
+                }
             );
         }
         else {
@@ -118,14 +117,14 @@ app.post('/login', function(req,res) {
 
   	console.log("Username: " + username);
 	console.log("Password: " + password);
-	
+
 	// validate username and password 
 	req.flash('success', 'Registration successfully');
 	req.flash('fail', 'Incorrect Username or Password');
 	if(username == "app") {
 		req.flash('logged_in', 'true')
 		req.flash('username', username);
-		res.redirect(307, '/app')
+		res.redirect(307, '/app');
 	}
 	else {
 		req.flash('logged_in', 'false')
@@ -138,7 +137,7 @@ app.post('/login', function(req,res) {
       console.log("Collection '" + username + "' created!!!");
     });
 
-    var user = {"id": counter, "password": password, "symbol":""};
+    var user = {"id": counter, "username":username, "password": password, "symbol":""};
     counter++;
     // create new collection for new user
     db.collection(username).insertOne(user, function(err, res) {
