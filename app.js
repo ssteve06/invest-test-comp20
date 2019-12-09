@@ -19,6 +19,10 @@ var db
 var username;
 var counter = 0;
 
+const APIKey = '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';
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(APIKey);
+
   MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
     if (err) return console.log(err)
 
@@ -32,9 +36,9 @@ app.set('public engine', 'ejs'); // set up ejs for templating;
 app.use(flash());
 app.use(session({ secret: 'webprogrammingcomp20' }));
 
-app.listen(process.env.PORT || 3000, function(){
+app.listen(process.env.PORT || 3000, function() {
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-  });
+});
 
 
 function checkExists(db, collection, query) {
@@ -85,6 +89,7 @@ app.post('/stock/:sym', async(req, res) => {
                 {
                     "username": "",
                     "password": "",
+                    "email": "",
                     "symbol": json.symbol,
                     "latestPrice":  json.latestPrice,
                     "quantity": quant
@@ -174,13 +179,15 @@ app.get('/newuser', function(req, res) {
     //console.log(req.body);
 
     /*username = req.body.username;
-    const password = req.body.password;*/
+    const password = req.body.password;
+    const email = req.body.email*/
 
 /*
     console.log("Username: " + username);
     console.log("Password: " + password);
+    console.log("Email: " + email);
 
-    var user = {"id": counter, "username": username, "password": password, "symbol":""};
+    var user = {"id": counter, "username": username, "password": password, "email": email, "symbol":""};
     counter++;
     // create new collection for new user
     console.log("adding new user");
@@ -189,6 +196,23 @@ app.get('/newuser', function(req, res) {
     });
     db.collection(username).insertOne(user, function(err, res) {});*/
 });
+
+/*app.post('/forgotpassword', function (req, res) {
+    var query = {"username": username};
+    var doc = checkExists(db, username, query);
+    doc.then(function(value) {
+        var email = value[0].email;
+        var password = value[0].password;
+        const msg = {
+            to: 'maxjramer@gmail.com',
+            from: 'maxjramer@gmail.com',
+            subject: 'Stock Investment Simulator Forgot Password',
+            text: 'Here is your account information:\n\tUsername: ' + username + '\n\tPassword: ' + password,
+            html: '',
+        };
+        sgMail.send(msg);
+    });
+});*/
 
 
 
