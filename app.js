@@ -42,15 +42,9 @@ function checkExists(db, collection, query) {
         db.collection(username).find(query, { $exists: true }).toArray(function (err, doc) //find if a value exists
         {
             if (doc && doc.length) //if it does
-            {
-                //console.log(doc); // print out what it sends back
                 resolve(doc);
-            }
             else // if it does not 
-            {
-                console.log("Not in docs");
                 resolve(0);
-            }
         });
     });
 }
@@ -89,6 +83,8 @@ app.post('/stock/:sym', async(req, res) => {
             // inserts new stock if doesn't exist
             db.collection(username).insertOne(
                 {
+                    "username": "",
+                    "password": "",
                     "symbol": json.symbol,
                     "latestPrice":  json.latestPrice,
                     "quantity": quant
@@ -102,8 +98,6 @@ app.post('/stock/:sym', async(req, res) => {
             var newvalues = { $set: {"quantity": new_quant} };
             db.collection(username).updateOne(myquery, newvalues, function(err, res) {
                 if (err) throw err;
-                else
-                    console.log(value[0].symbol + " quantity updated");
             });
         }
     });
@@ -117,31 +111,27 @@ app.post('/login', function(req,res) {
   	console.log("Username: " + username);
 	console.log("Password: " + password);
 
-	// validate username and password 
-	req.flash('success', 'Registration successfully');
-	req.flash('fail', 'Incorrect Username or Password');
-	if(username == "app") {
-		req.flash('logged_in', 'true')
-		req.flash('username', username);
-		res.redirect(307, '/app');
-	}
-	else {
-		req.flash('logged_in', 'false')
-		res.locals.message = req.flash();
-		res.render('login.ejs');
-	}
+    var counter = 0;
 
-	db.createCollection(username, function(err, collection) {
-      //if (err) throw err;
-      console.log("Collection '" + username + "' created!!!");
-    });
-
-    var user = {"id": counter, "username":username, "password": password, "symbol":""};
-    counter++;
-    // create new collection for new user
-    db.collection(username).insertOne(user, function(err, res) {
-        if (err) throw err;
-        console.log(user);
+    req.flash('success', 'Registration successfully');
+    req.flash('fail', 'Incorrect Username or Password');
+    db.listCollections().toArray(function(err, collInfos)
+    {
+        console.log(collInfos[0].name);
+        var exists = false;
+        for (i = 0; i < collInfos.length && !exists; i++) {
+            if (collInfos[i].name == username) {
+                req.flash('logged_in', 'true')
+                req.flash('username', username);
+                res.redirect(307, '/app');
+                exists = true;
+            }
+        }
+        if (!exists) {
+                req.flash('logged_in', 'false')
+                res.locals.message = req.flash();
+                res.render('login.ejs');
+            }
     });
 });
 
@@ -157,6 +147,29 @@ app.get('/login_suc', function(req, res) {
 	res.render('app.ejs');
 });
 
-app.get('/newuser', function(req, res){
+app.get('/newuser', function(req, res) {
+    var counter = 0;
 	res.render('signup.ejs');
-})
+
+    console.log(req);
+
+    /*username = req.body.username;
+    const password = req.body.password;*/
+
+/*
+    console.log("Username: " + username);
+    console.log("Password: " + password);
+
+    var user = {"id": counter, "username": username, "password": password, "symbol":""};
+    counter++;
+    // create new collection for new user
+    console.log("adding new user");
+    db.createCollection(username, function(err, collection) {
+        console.log("new user " + username + " created!!!");
+    });
+    db.collection(username).insertOne(user, function(err, res) {});*/
+});
+
+
+
+
