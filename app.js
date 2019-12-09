@@ -37,9 +37,9 @@ app.listen(process.env.PORT || 3000, function(){
   });
 
 
-function checkExists(db, collection, key) {
+function checkExists(db, collection, query) {
         return new Promise((resolve, reject) => {
-            db.collection(username).find({ "symbol": key }, { $exists: true }).toArray(function (err, doc) //find if a value exists
+            db.collection(username).find(query, { $exists: true }).toArray(function (err, doc) //find if a value exists
             {
                 if (doc && doc.length) //if it does
                 {
@@ -81,9 +81,10 @@ app.post('/stock/:sym', async(req, res) => {
 	const quant = req.body['quant'];
 
 	var key = json.symbol;
+    var query = {"symbol": key};
 
     // finds document in username collection
-    var doc = checkExists(db, username, key);
+    var doc = checkExists(db, username, query);
     doc.then(function(value) {
         if (value == 0) {
             // inserts new stock if doesn't exist
