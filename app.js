@@ -36,6 +36,25 @@ app.listen(process.env.PORT || 3000, function(){
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
   });
 
+
+function checkExists(db, collection, key) {
+        return new Promise((resolve, reject) => {
+            db.collection(username).find({ "symbol": key }, { $exists: true }).toArray(function (err, doc) //find if a value exists
+            {
+                if (doc && doc.length) //if it does
+                {
+                    //console.log(doc); // print out what it sends back
+                    resolve(doc);
+                }
+                else // if it does not 
+                {
+                    console.log("Not in docs");
+                    resolve(0);
+                }
+            });
+        });
+    }
+
 app.use(express.static("public"));
 
 
@@ -48,12 +67,7 @@ app.get('/', function(req, res) {
 app.get('/stock/:sym', async (req,res) => {
 	const sym = req.params.sym;
 
-
-	//db.collection(username).findOne()
-
 });
-
-/*############ MAX - send stock data to proper username and password #########*/
 
 app.post('/stock/:sym', async(req, res) => {
 	const sym = req.params.sym;
@@ -66,19 +80,29 @@ app.post('/stock/:sym', async(req, res) => {
 	res.json(json);
 	const quant = req.body['quant'];
 
-	var myquery = { "id": counter - 1 };
-  	var newvalues = { $addToSet: { "stocks":
-			   				{
-			   					"symbol": json.symbol,
-			   					"latestPrice": json.latestPrice,
-			   					"quantity": quant
-			   				}
-			   			}
-			   		};
-
-    	db.collection(username).updateOne(myquery, newvalues, function(err, res) {
-    		console.log("stocks array updated");
-    	});
+	var key = json.symbol;
+    var doc = checkExists(db, username, key);
+    doc.then(function(value) {
+        if (value == 0) {
+            db.collection(username).insertOne(
+                    {
+                        "symbol": json.symbol,
+                        "latestPrice":  json.latestPrice,
+                        "quantity": quant
+                    }
+            );
+        }
+        else {
+            var new_quant = (parseInt(quant) + parseInt(value[0].quantity)).toString(10);
+            var myquery = { "symbol": key };
+            var newvalues = { $set: {"quantity": new_quant} };
+            db.collection(username).updateOne(myquery, newvalues, function(err, res) {
+                if (err) throw err;
+                else
+                    console.log(value[0].symbol + " quantity updated");
+            });
+        }
+    });
 });
 
 app.post('/login', function(req,res) {
@@ -109,7 +133,7 @@ app.post('/login', function(req,res) {
       console.log("Collection '" + username + "' created!!!");
     });
 
-    var user = {"id": counter, "password": password, "stocks": []};
+    var user = {"id": counter, "password": password, "symbol":""};
     counter++;
     // create new collection for new user
     db.collection(username).insertOne(user, function(err, res) {
