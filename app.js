@@ -81,9 +81,12 @@ app.post('/stock/:sym', async(req, res) => {
 	const quant = req.body['quant'];
 
 	var key = json.symbol;
+
+    // finds document in username collection
     var doc = checkExists(db, username, key);
     doc.then(function(value) {
         if (value == 0) {
+            // inserts new stock if doesn't exist
             db.collection(username).insertOne(
                     {
                         "symbol": json.symbol,
@@ -93,6 +96,7 @@ app.post('/stock/:sym', async(req, res) => {
             );
         }
         else {
+            // adds to quantity of stock if exists
             var new_quant = (parseInt(quant) + parseInt(value[0].quantity)).toString(10);
             var myquery = { "symbol": key };
             var newvalues = { $set: {"quantity": new_quant} };
@@ -117,7 +121,7 @@ app.post('/login', function(req,res) {
 	// validate username and password 
 	req.flash('success', 'Registration successfully');
 	req.flash('fail', 'Incorrect Username or Password');
-	if(username == "mramer01") {
+	if(username == "app") {
 		req.flash('logged_in', 'true')
 		req.flash('username', username);
 		res.redirect(307, '/app')
