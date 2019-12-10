@@ -1,9 +1,9 @@
-Comp20 Final Project: Stock Investment Simulator
+## Comp20 Final Project: Stock Investment Simulator
 
-To update your version:
-  git checkout master
-  git pull master
+To update your version:  
+    &nbsp;&nbsp;&nbsp;&nbsp;**git checkout master**  
+    &nbsp;&nbsp;&nbsp;&nbsp;**git pull master**
 
-Additional packages were installed, so run:
-  npm install
-before running locally on heroku
+Additional packages were installed, so run:  
+  &nbsp;&nbsp;&nbsp;&nbsp;**npm install**  
+BEFORE running locally on heroku.
