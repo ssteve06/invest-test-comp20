@@ -18,9 +18,9 @@ const dbName = 'test'
 var db
 var username;
 
-const APIKey = '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';
+/*const APIKey = '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';
 const sgMail = require('@sendgrid/mail'); // MUST MAKE ENVIRONMENT VARIABLES WHEN DEPLOYING ON HEROKU
-sgMail.setApiKey(APIKey);
+sgMail.setApiKey(APIKey);*/
 
 
   MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
