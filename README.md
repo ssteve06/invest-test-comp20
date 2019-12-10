@@ -6,4 +6,4 @@ To update your version:
 
 Additional packages were installed, so run:  
   &nbsp;&nbsp;&nbsp;&nbsp;**npm install**  
-BEFORE running locally on heroku.
+BEFORE running locally on Heroku.
