@@ -117,7 +117,8 @@ th {
 }
 
 #username,
-#password {
+#password,
+#email {
 	display: block;
 	width: 350px;
 	height: 40px;
