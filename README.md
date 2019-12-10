@@ -6,4 +6,6 @@ To update your version:
 
 Additional packages were installed, so run:  
   &nbsp;&nbsp;&nbsp;&nbsp;**npm install**  
-BEFORE running locally on Heroku.
+BEFORE running locally on Heroku.  
+
+If running application from master branch, remember to change the link to your mongodb atlas account.
