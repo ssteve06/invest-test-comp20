@@ -12,15 +12,15 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const MongoClient = require('mongodb').MongoClient;
-//const url = "mongodb+srv://demo_admin:comp20@democluster-atdke.mongodb.net/test?retryWrites=true&w=majority";
-const url = "mongodb+srv://comp20admin:comp20admin@comp20-winrz.mongodb.net/test?retryWrites=true&w=majority";
+const url = "mongodb+srv://demo_admin:comp20@democluster-atdke.mongodb.net/test?retryWrites=true&w=majority";
+//const url = "mongodb+srv://comp20admin:comp20admin@comp20-winrz.mongodb.net/test?retryWrites=true&w=majority";
 
 //const url = 'mongodb://127.0.0.1:27017'
 const dbName = 'test'
 var db
 var username;
 
-/*const APIKey = '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';
+/*const APIKey = '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';
 const sgMail = require('@sendgrid/mail'); // MUST MAKE ENVIRONMENT VARIABLES WHEN DEPLOYING ON HEROKU
 sgMail.setApiKey(APIKey);*/
 
@@ -183,48 +183,44 @@ app.get('/signup', function(req, res) {
 });
 
 app.post('/forgotpassword', function (req, res) {
-    console.log("At forgot password")
     const username = req.body.username;
-    console.log("username: " + username)
-    var query = {"username": username};
+/*    var query = {"username": username};
     var doc = checkExists(db, username, query);
-    console.log("here");
     doc.then(function(value) {
         var email = value[0].email;
         var password = value[0].password;
         const msg = {
             to: email,
-            from: 'maxjramer@gmail.com',
+            from: 'comp20investing@gmail.com',
             subject: 'Stock Investment Simulator Forgot Password',
             text: 'text',
             html: 'Here is your account information:\n\tUsername: ' + username + '\n\tPassword: ' + password,
         };
         sgMail.send(msg);
-    });
+    });*/
     res.redirect(307, '/login');
 });
 
-app.post('/newuser', function(req,res){
+app.post('/newuser', function(req,res) {
     var counter = 0;
     const username = req.body.username;
     const password = req.body.password;
     const email = req.body.email;
-    console.log("username: " + username + " password: " + password)
 
     var user = {"id": counter, "username": username, "password": password, "email": email, "symbol":""};
     counter++;
     // create new collection for new user
     var exists;
-    if(username != ''){
+    if(username != '') {
         query = {"username":username}
         exists = checkExists(db, username, query);
     }
-    else{
+    else {
         exists = new Promise(function(resolve, reject){
             resolve(1);
         })
     }
-    exists.then(function(value){
+    exists.then(function(value) {
         if(value == 0){
             console.log("adding new user");
             db.createCollection(username, function(err, collection) {
@@ -235,13 +231,11 @@ app.post('/newuser', function(req,res){
             req.flash("username", username);
             res.redirect(307, '/app');
         }
-        else{
+        else {
             req.flash('taken', 'true');
             res.locals.message = req.flash()
             res.render('signup.ejs');
         }
     })
-})
-
-
+});
 
