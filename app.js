@@ -12,7 +12,9 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const MongoClient = require('mongodb').MongoClient;
-const url = "mongodb+srv://demo_admin:comp20@democluster-atdke.mongodb.net/test?retryWrites=true&w=majority";
+//const url = "mongodb+srv://demo_admin:comp20@democluster-atdke.mongodb.net/test?retryWrites=true&w=majority";
+const url = "mongodb+srv://comp20admin:comp20admin@comp20-winrz.mongodb.net/test?retryWrites=true&w=majority";
+
 //const url = 'mongodb://127.0.0.1:27017'
 const dbName = 'test'
 var db
@@ -43,7 +45,7 @@ app.listen(process.env.PORT || 3000, function() {
 
 function checkExists(db, collection, query) {
     return new Promise((resolve, reject) => {
-        db.collection(username).find(query, { $exists: true }).toArray(function (err, doc) //find if a value exists
+        db.collection(collection).find(query, { $exists: true }).toArray(function (err, doc) //find if a value exists
         {
             if (doc && doc.length) //if it does
                 resolve(doc);
@@ -56,10 +58,16 @@ function checkExists(db, collection, query) {
 app.use(express.static("public"));
 
 app.get('/', function(req, res) {
-	req.flash('success');
+	req.flash('logged_in', 'N/A');
 	res.locals.message = req.flash();
 	res.render('login.ejs')
 });
+
+app.get('/login', function(req,res){
+    req.flash('logged_in', 'failed')
+    res.locals.message = req.flash();
+	res.render('login.ejs')
+})
 
 app.get('/stock/:sym', async (req,res) => {
 	const sym = req.params.sym;
@@ -67,7 +75,9 @@ app.get('/stock/:sym', async (req,res) => {
 });
 
 app.post('/stock/:sym', async(req, res) => {
-	const sym = req.params.sym;
+    const sym = req.params.sym;
+    const username = req.body['username'];
+    console.log(username)
 
 	console.log(sym);
 	const api_url = 'https://cloud.iexapis.com/stable/stock/'+sym+'/quote?token=pk_065b1600526c4ad5b953052a98fa7070';
@@ -87,9 +97,7 @@ app.post('/stock/:sym', async(req, res) => {
             // inserts new stock if doesn't exist
             db.collection(username).insertOne(
                 {
-                    "username": "",
-                    "password": "",
-                    "email": "",
+                    "data" : Date.now(),
                     "symbol": json.symbol,
                     "latestPrice":  json.latestPrice,
                     "quantity": quant
@@ -109,95 +117,78 @@ app.post('/stock/:sym', async(req, res) => {
 });
 
 app.post('/login', function(req,res) {
-    username = req.body.username;
+    const username = req.body.username;
 /*############Jun - login validation (username and password) -- check if username and password exist ####*/
     const password = req.body.password;
 
     console.log("Username: " + username);
     console.log("Password: " + password);
 
-    req.flash('success', 'Registration successfully');
-    req.flash('fail', 'Incorrect Username or Password');
-    db.listCollections().toArray(function(err, collInfos)
-    {
-        // only sends user to main page when password and username is correct
-        // DOES NOT yet display "invalid username and password" when incorrect
-        var exists = false;
-        for (i = 0; i < collInfos.length && !exists; i++) {
-            if (collInfos[i].name == username) {
-                var query = {"password": password};
-                var doc = checkExists(db, username, query);
-                doc.then(function(value) {
-                    if (value != 0 && value[0].password == password) {
-                        req.flash('logged_in', 'true')
-                        req.flash('username', username);
-                        res.redirect(307, '/app');
-                        console.log("password correct");
-                        exists = true;
-                    }
-                });
-            }
+    var exists = false;
+    //var err= db.listCollections().toArray().err;
+    db.listCollections().toArray(function(err, collInfos){
+    var exists = false;
+    // only sends user to main page when password and username is correct
+    // DOES NOT yet display "invalid username and password" when incorrect
+    for (i = 0; i < collInfos.length && !exists; i++) {
+        if (collInfos[i].name == username) {
+            var query = {"password": password};
+            var doc = checkExists(db, username, query);
+            var doc_bool = doc.then(function(value) {
+                var exists = false;
+                if (value != 0 && value[0].password == password) {
+                    req.flash('logged_in', 'true')
+                    req.flash('username', username);
+                    res.redirect(307, '/app')
+                   // console.log("password correct");
+                }
+                else{
+                   // console.log("pass incorrect")
+                    req.flash('logged_in', 'failed')
+                    res.locals.message = req.flash();
+                    res.render('login.ejs');
+                    exists = true;
+                }
+                return exists;
+            });
+            if(doc_bool)
+                exists = true;
         }
-/*        if (!exists) {
-            req.flash('logged_in', 'false')
-            res.locals.message = req.flash();
-            res.render('login.ejs');
-        }*/
-
-        /*if (collInfos[i].name == username) {
-            req.flash('logged_in', 'true')
-            req.flash('username', username);
-            res.redirect(307, '/app');
-            exists = true;
-        }
-        if (!exists) {
-            req.flash('logged_in', 'false')
-            res.locals.message = req.flash();
-            res.render('login.ejs');
-        }*/
-    });
-});
+    }
+    if(!doc_bool){ // username wrong 
+        req.flash('logged_in', 'failed')
+        res.redirect('/login')
+        return;
+    }
+    })
+})
 
 app.post('/app', function(req, res) {
-	var message = req.flash('logged_in');
-	if(message == 'true')
-		res.render('app.ejs');
+    var message = req.flash('logged_in');
+    var username = req.flash('username');
+    req.flash('username', username);
+    console.log("post app username: " + username)
+    if(message == 'true'){
+        res.locals.message = req.flash();
+        res.render('app.ejs');
+    }
 	else
 		console.log("fail");
 });
 
-app.get('/login_suc', function(req, res) {
-	res.render('app.ejs');
-});
-
-app.get('/newuser', function(req, res) {
-    var counter = 0;
+app.get('/signup', function(req, res) {
+    req.flash();
+    res.locals.message = req.flash();
 	res.render('signup.ejs');
-
-    //console.log(req.body);
-
-    /*username = req.body.username;
-    const password = req.body.password;
-    const email = req.body.email*/
-
-/*
-    console.log("Username: " + username);
-    console.log("Password: " + password);
-    console.log("Email: " + email);
-
-    var user = {"id": counter, "username": username, "password": password, "email": email, "symbol":""};
-    counter++;
-    // create new collection for new user
-    console.log("adding new user");
-    db.createCollection(username, function(err, collection) {
-        console.log("new user " + username + " created!!!");
-    });
-    db.collection(username).insertOne(user, function(err, res) {});*/
 });
 
-/*app.post('/forgotpassword', function (req, res) {
+app.post('/forgotpassword', function (req, res) {
+    console.log("At forgot password")
+    const username = req.body.username;
+    console.log("username: " + username)
     var query = {"username": username};
     var doc = checkExists(db, username, query);
+    console.log("here");
     doc.then(function(value) {
         var email = value[0].email;
         var password = value[0].password;
@@ -210,8 +201,47 @@ app.get('/newuser', function(req, res) {
         };
         sgMail.send(msg);
     });
-});*/
+    res.redirect(307, '/login');
+});
 
+app.post('/newuser', function(req,res){
+    var counter = 0;
+    const username = req.body.username;
+    const password = req.body.password;
+    const email = req.body.email;
+    console.log("username: " + username + " password: " + password)
+
+    var user = {"id": counter, "username": username, "password": password, "email": email, "symbol":""};
+    counter++;
+    // create new collection for new user
+    var exists;
+    if(username != ''){
+        query = {"username":username}
+        exists = checkExists(db, username, query);
+    }
+    else{
+        exists = new Promise(function(resolve, reject){
+            resolve(1);
+        })
+    }
+    exists.then(function(value){
+        if(value == 0){
+            console.log("adding new user");
+            db.createCollection(username, function(err, collection) {
+                console.log("new user " + username + " created!!!");
+            });
+            db.collection(username).insertOne(user, function(err, res) {});
+            req.flash("logged_in", 'true');
+            req.flash("username", username);
+            res.redirect(307, '/app');
+        }
+        else{
+            req.flash('taken', 'true');
+            res.locals.message = req.flash()
+            res.render('signup.ejs');
+        }
+    })
+})
 
 
 

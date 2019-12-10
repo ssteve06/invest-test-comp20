@@ -12,6 +12,8 @@
 
 	<header>Stock Investment Simulator App</header>
 
+	<span id="username" style="display: none;"><%= message.username %></span>
+
 	<p>Hello!</p>
 	<div id="wrap">
 		 Enter Stock Symbol:<br>
@@ -57,11 +59,13 @@
 			async function myFunction(){
 			    var sym = document.getElementById("stonk").value; 
 				var quantity = document.getElementById("quant").value;
+				const username = $("#username").html();
 				console.log(sym);
+				console.log(username)
 				document.getElementById("symbol").innerHTML=sym;
 
 				const api_url = '/stock/'+sym;
-				data = {"quant": quantity}
+				data = {"quant": quantity, "username": username}
 
 				const response = await fetch(api_url, {
 					method: "POST",

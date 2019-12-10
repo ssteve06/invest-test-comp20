@@ -179,3 +179,11 @@ th {
 	position: relative;
 	top: 120px;
 }
+
+.fail_mes{
+	display: block;
+	text-align: center;
+	color: #DD4545;
+	font-size: 20px;
+	padding-bottom: 5px;
+}

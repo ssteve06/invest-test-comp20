@@ -29,17 +29,22 @@
             <br>
             <input type="password" name="password" id="password" placeholder="Password">
             <br>
+            <% if (message != null && message.logged_in != 'N/A'){ %>
+                <span class="fail_mes">Username or password incorrect!</span>
+            <% }%>
+          <!--  <input type="submit" name="button" value="Sign in" id="loginButton">-->
             <button type="submit" id="loginButton">Sign In</button>
+            <button type="submit" id="signupButton"  formaction="/forgotpassword">Forgot Password</button>
         </form>
-        <form action="/newuser" method="GET">
+        <form action="/signup" method="GET">
             <button type="submit" id="signupButton">Sign up</button>
         </form>
     </div>
-    <% if (message.logged_in == 'true') { %>
+   <!-- <% if (message.logged_in == 'true') { %>
     <div class="message"><%= message.success %></div>
     <% } else { %>
     <div class="message"><%= message.fail %></div>
-    <% } %>
+    <% } %>-->
 </body>
 
 </html>
