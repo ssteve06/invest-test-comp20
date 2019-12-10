@@ -17,11 +17,11 @@ const url = "mongodb+srv://demo_admin:comp20@democluster-atdke.mongodb.net/test?
 const dbName = 'test'
 var db
 var username;
-var counter = 0;
 
 const APIKey = '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';
-const sgMail = require('@sendgrid/mail');
+const sgMail = require('@sendgrid/mail'); // MUST MAKE ENVIRONMENT VARIABLES WHEN DEPLOYING ON HEROKU
 sgMail.setApiKey(APIKey);
+
 
   MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
     if (err) return console.log(err)
@@ -55,7 +55,6 @@ function checkExists(db, collection, query) {
 
 app.use(express.static("public"));
 
-
 app.get('/', function(req, res) {
 	req.flash('success');
 	res.locals.message = req.flash();
@@ -64,6 +63,7 @@ app.get('/', function(req, res) {
 
 app.get('/stock/:sym', async (req,res) => {
 	const sym = req.params.sym;
+    console.log("stock db get request");
 });
 
 app.post('/stock/:sym', async(req, res) => {
@@ -115,8 +115,6 @@ app.post('/login', function(req,res) {
 
     console.log("Username: " + username);
     console.log("Password: " + password);
-
-    var counter = 0;
 
     req.flash('success', 'Registration successfully');
     req.flash('fail', 'Incorrect Username or Password');
@@ -204,11 +202,11 @@ app.get('/newuser', function(req, res) {
         var email = value[0].email;
         var password = value[0].password;
         const msg = {
-            to: 'maxjramer@gmail.com',
+            to: email,
             from: 'maxjramer@gmail.com',
             subject: 'Stock Investment Simulator Forgot Password',
-            text: 'Here is your account information:\n\tUsername: ' + username + '\n\tPassword: ' + password,
-            html: '',
+            text: 'text',
+            html: 'Here is your account information:\n\tUsername: ' + username + '\n\tPassword: ' + password,
         };
         sgMail.send(msg);
     });
