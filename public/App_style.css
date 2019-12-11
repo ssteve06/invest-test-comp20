@@ -2,7 +2,7 @@
 	margin: 0;
 	padding: 0;
 }
-
+ 
 #mainHeader {
 	text-align: center;
 	padding: 20px;
@@ -45,7 +45,8 @@ h3 {
 
 .symbolText {
 	color: #aaa;
-
+	font-family: 'Raleway', sans-serif;
+	font-weight: bold;
 }
 
 #symbol {
@@ -60,7 +61,7 @@ h3 {
 
 p {
 	font-size: 20px;
-	font-style: italic;
+	
 	background-color: rgba(100, 200, 50, 0.0);
 	text-align: center;
 	padding: 10px;
@@ -131,6 +132,8 @@ table {
 	background-color: #ffffff;
 	border-collapse: collapse;
 	border-radius: 8px;
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
 }
 
 th,
@@ -141,7 +144,7 @@ td {
 }
 
 tr:nth-child(even) {
-	background-color: #f2f2f2
+	background-color: #f2f2f2;
 }
 
 th {
