@@ -20,10 +20,8 @@ const dbName = 'test'
 var db
 var username;
 
-/*const APIKey = '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';
-const sgMail = require('@sendgrid/mail'); // MUST MAKE ENVIRONMENT VARIABLES WHEN DEPLOYING ON HEROKU
-sgMail.setApiKey(APIKey);*/
-
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.sgMail_API_KEY);
 
   MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
     if (err) return console.log(err)
@@ -184,7 +182,7 @@ app.get('/signup', function(req, res) {
 
 app.post('/forgotpassword', function (req, res) {
     const username = req.body.username;
-/*    var query = {"username": username};
+    var query = {"username": username};
     var doc = checkExists(db, username, query);
     doc.then(function(value) {
         var email = value[0].email;
@@ -197,7 +195,7 @@ app.post('/forgotpassword', function (req, res) {
             html: 'Here is your account information:\n\tUsername: ' + username + '\n\tPassword: ' + password,
         };
         sgMail.send(msg);
-    });*/
+    });
     res.redirect(307, '/login');
 });
 
