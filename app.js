@@ -61,6 +61,10 @@ app.get('/', function(req, res) {
 	res.render('login.ejs')
 });
 
+app.get('/app', function(req, res){
+    res.redirect('/');
+})
+
 app.get('/login', function(req,res){
     req.flash('logged_in', 'failed')
     res.locals.message = req.flash();
