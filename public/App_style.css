@@ -274,3 +274,8 @@ th {
 	position: relative;
 	top: 120px;
 }
+
+#failMessage {
+	text-align: center;
+	
+}
