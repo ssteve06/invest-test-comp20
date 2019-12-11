@@ -32,20 +32,29 @@ h2 {
 }
 
 h3 {
-	color: #aaa;
+	color: #ffeeee;
 	font-family: georgia, times;
 	border: 3px;
 	text-align: center;
 	padding: 5px;
-	background-color: rgba(200, 200, 200, 0.8);
+	/* background-color: rgba(200, 200, 200, 0.8); */
+	background-color: #3f3f3f;
 }
+
+
 
 .symbolText {
 	color: #aaa;
+
+}
+
+#symbol {
+	color: #fffeee;
+	padding-bottom: 20px;
 }
 
 .textContent {
-	color: #000;
+	color: #aaa;
 	font-family: 'Raleway', sans-serif;
 }
 
@@ -85,7 +94,8 @@ input[type=text] {
 	color: #000;
 	background-color: #aaa;
 	cursor: pointer;
-	border: none;
+	/*border: none;*/
+	border-radius: 8px;
 }
 
 #submitButton:hover {
@@ -103,23 +113,31 @@ input[type=text] {
 
 #stock_info {
 	padding: 5px;
+	color: #000;
 }
 
-/* #combined {
-	border: 2px solid #000;
+/*#combined {
+	border: 2px solid #000; 
+	
 } */
+
+.combined {
+	background-color: #3f3f3f;
+}
 
 table {
 	margin-left: auto;
 	margin-right: auto;
 	background-color: #ffffff;
 	border-collapse: collapse;
+	border-radius: 8px;
 }
 
 th,
 td {
 	text-align: left;
 	padding: 8px;
+	
 }
 
 tr:nth-child(even) {
@@ -127,8 +145,16 @@ tr:nth-child(even) {
 }
 
 th {
-	background-color: rgba(50, 200, 50, 1);
-	color: #ffffff
+	background-color: #917474;
+	color: #ffffff;
+}
+
+#topLeft {
+	border-top-left-radius: 8px;
+}
+
+#topRight {
+	border-top-right-radius: 8px;
 }
 
 .loginHeader {
@@ -141,7 +167,7 @@ th {
 }
 
 .pls {
-	position: relative;
+	position: reive;
 	top: 80px;
 	font-style: normal;
 	font-family: 'Raleway', sans-serif;
@@ -180,7 +206,7 @@ th {
 	color: #000;
 	background-color: #aaa;
 	cursor: pointer;
-	border: none;
+	border-radius: 5px;
 }
 
 #loginButton:hover {
@@ -239,11 +265,4 @@ th {
 #loginForm {
 	position: relative;
 	top: 120px;
-}
-
-.fail_mes{
-	display: block;
-	text-align: center;
-	color: #900;
-	padding-bottom: 10px;
 }
