@@ -75,7 +75,7 @@ app.get('/stock/:sym', async (req,res) => {
 app.post('/stock/:sym', async(req, res) => {
     const sym = req.params.sym;
     const username = req.body['username'];
-    console.log(username)
+    console.log(username);
 
 	console.log(sym);
 	const api_url = 'https://cloud.iexapis.com/stable/stock/'+sym+'/quote?token=pk_065b1600526c4ad5b953052a98fa7070';
@@ -95,6 +95,7 @@ app.post('/stock/:sym', async(req, res) => {
             // inserts new stock if doesn't exist
             db.collection(username).insertOne(
                 {
+                    "id" : 1,
                     "data" : Date.now(),
                     "symbol": json.symbol,
                     "latestPrice":  json.latestPrice,
@@ -159,14 +160,24 @@ app.post('/login', function(req,res) {
         return;
     }
     })
-})
+});
+
+/*app.post('/stockdata', function(req, res) {
+    var query = {"id": 1};
+    username = 'mramer01';
+    var doc = checkExists(db, username, query);
+    doc.then(function(value) {
+        if (value != 0)
+            res.send(value);
+    });
+});*/
 
 app.post('/app', function(req, res) {
     var message = req.flash('logged_in');
     var username = req.flash('username');
     req.flash('username', username);
     console.log("post app username: " + username)
-    if(message == 'true'){
+    if(message == 'true') {
         res.locals.message = req.flash();
         res.render('app.ejs');
     }
