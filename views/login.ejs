@@ -31,7 +31,9 @@
             <input type="password" name="password" id="password" placeholder="Password">
             <br>
             <% if (message != null && message.logged_in != 'N/A'){ %>
-                <span class="fail_mes" >Username or password incorrect!</span>
+                <div id="failMessage">
+                    <span class="fail_mes" style="color: #fff">Username or password incorrect!</span>
+                </div><br/>
             <% }%>
           <!--  <input type="submit" name="button" value="Sign in" id="loginButton">-->
             <button type="submit" id="loginButton">Sign In</button>

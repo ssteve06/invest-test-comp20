@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+<head> 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -164,14 +164,14 @@
                 quantity = quants[check]; //This line updates the total closing stock value
             }
             
-            document.getElementById("latestPrice").innerHTML = "$" + latestPrice;
+            document.getElementById("latestPrice").innerHTML = "$" + latestPrice.toLocaleString();
 
             build_table()
         }   
 
         function build_table(){
-            var txt = "<h2> Your Stocks:</h2>" + " <table border='1'>";
-            txt += "<tr><th>Stock</th><th>Market Price</th><th>Quantity</th><th>Total Value</th></tr>";
+            var txt = "<h2> Your Stocks:</h2>" + " <table>";
+            txt += "<tr><th id=\"topLeft\">Stock</th><th>Market Price</th><th>Quantity</th><th id=\"topRight\">Total Value</th></tr>";
             var total_stocks = 0.0;
             var total_price = 0.0;
 
@@ -179,7 +179,7 @@
 
             for (x in stocks) {
                 tot_quant = quants[x]
-                txt += "<tr><td>" + stocks[x] + "</td><td>"  + prices[x] + "</td><td>"+ tot_quant + "</td><td>" + prices[x] * tot_quant + "</td></tr>";
+                txt += "<tr><td>" + stocks[x] + "</td><td>"  + "$" + prices[x].toLocaleString() + "</td><td>"+ tot_quant + "</td><td>" + "$" + (prices[x] * tot_quant).toLocaleString() + "</td></tr>";
                 total_val += prices[x] * tot_quant;
             }
 
