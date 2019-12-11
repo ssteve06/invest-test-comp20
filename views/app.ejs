@@ -118,7 +118,7 @@
             const username = $("#username").html();
             console.log(sym);
             console.log(username);
-            document.getElementById("symbol").innerHTML = sym;
+            document.getElementById("symbol").innerHTML = sym.toUpperCase();
 
             const api_url = '/stock/' + sym;
             data = {
