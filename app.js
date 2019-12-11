@@ -20,8 +20,8 @@ const dbName = 'test'
 var db
 var username;
 
-const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.sgMail_API_KEY);
+//const sgMail = require('@sendgrid/mail');
+//sgMail.setApiKey(process.env.sgMail_API_KEY);
 
   MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
     if (err) return console.log(err)
@@ -181,7 +181,7 @@ app.get('/signup', function(req, res) {
 });
 
 app.post('/forgotpassword', function (req, res) {
-    const username = req.body.username;
+    /*const username = req.body.username;
     var query = {"username": username};
     var doc = checkExists(db, username, query);
     doc.then(function(value) {
@@ -196,7 +196,7 @@ app.post('/forgotpassword', function (req, res) {
         };
         sgMail.send(msg);
     });
-    res.redirect(307, '/login');
+    res.redirect(307, '/login');*/
 });
 
 app.post('/newuser', function(req,res) {
