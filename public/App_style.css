@@ -1,0 +1,242 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+#mainHeader {
+	text-align: center;
+	padding: 20px;
+	font-size: 30px;
+	font-style: italic;
+	font-family: 'Poiret One', cursive;
+	color: #aaa;
+}
+
+#mainBody {
+	background-color: #000;
+}
+
+#hello {
+	color: #aaa;
+	font-style: normal;
+	font-family: 'Raleway', sans-serif;
+}
+
+h2 {
+	color: #aaa;
+	font-family: georgia, times;
+	border: 3px;
+	text-align: center;
+	padding: 5px;
+	background-color: rgba(200, 200, 200, 0.0);
+}
+
+h3 {
+	color: #aaa;
+	font-family: georgia, times;
+	border: 3px;
+	text-align: center;
+	padding: 5px;
+	background-color: rgba(200, 200, 200, 0.8);
+}
+
+.symbolText {
+	color: #aaa;
+}
+
+.textContent {
+	color: #000;
+	font-family: 'Raleway', sans-serif;
+}
+
+p {
+	font-size: 20px;
+	font-style: italic;
+	background-color: rgba(100, 200, 50, 0.0);
+	text-align: center;
+	padding: 10px;
+}
+
+input[type=text] {
+	display: block;
+	width: 350px;
+	height: 40px;
+	margin: auto;
+	padding: 12px 20px;
+	font-size: 17px;
+	border: none;
+	outline: 0;
+	background: transparent;
+	border-bottom: 1px solid #aaa;
+	color: #fff;
+}
+
+.mainInput:focus {
+	border-bottom: 1px solid #fff;
+}
+
+#submitButton {
+	display: block;
+	margin: auto;
+	width: 390px;
+	height: 64px;
+	font-family: 'Raleway', sans-serif;
+	font-size: 17px;
+	color: #000;
+	background-color: #aaa;
+	cursor: pointer;
+	border: none;
+}
+
+#submitButton:hover {
+	background-color: #ccc;
+}
+
+#submitButton:active {
+	background-color: #999;
+}
+
+#wrap {
+	padding: 5px;
+	text-align: center;
+}
+
+#stock_info {
+	padding: 5px;
+}
+
+/* #combined {
+	border: 2px solid #000;
+} */
+
+table {
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #ffffff;
+	border-collapse: collapse;
+}
+
+th,
+td {
+	text-align: left;
+	padding: 8px;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2
+}
+
+th {
+	background-color: rgba(50, 200, 50, 1);
+	color: #ffffff
+}
+
+.loginHeader {
+	text-align: center;
+	padding: 20px;
+	font-size: 30px;
+	font-style: italic;
+	font-family: 'Poiret One', cursive;
+	color: #aaa;
+}
+
+.pls {
+	position: relative;
+	top: 80px;
+	font-style: normal;
+	font-family: 'Raleway', sans-serif;
+	color: #aaa;
+}
+
+#username,
+#password,
+#email {
+	display: block;
+	width: 350px;
+	height: 40px;
+	margin: auto;
+	padding: 12px 20px;
+	font-size: 17px;
+	border: none;
+	outline: 0;
+	background: transparent;
+	border-bottom: 1px solid #aaa;
+	color: #fff;
+}
+
+#username:focus,
+#password:focus,
+#email:focus {
+	border-bottom: 1px solid #fff;
+}
+
+#loginButton {
+	display: block;
+	margin: auto;
+	width: 390px;
+	height: 64px;
+	font-family: 'Raleway', sans-serif;
+	font-size: 17px;
+	color: #000;
+	background-color: #aaa;
+	cursor: pointer;
+	border: none;
+}
+
+#loginButton:hover {
+	background-color: #ccc;
+}
+
+#loginButton:active {
+	background-color: #999;
+}
+
+#forgotButton {
+	display: block;
+	margin: auto;
+	position: relative;
+	top: 20px;
+	color: #aaa;
+	background-color: #000;
+	font-size: 14px;
+	font-family: 'Raleway', sans-serif;
+	border: none;
+}
+
+#forgotButton:hover {
+	color: #fff;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#signupButton {
+	display: block;
+	margin: auto;
+	position: relative;
+	top: 20px;
+	background-color: #000;
+	color: #aaa;
+	font-size: 14px;
+	font-family: 'Raleway', sans-serif;
+	border: none;
+}
+
+#signupButton:hover {
+	color: #fff;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#loginBody {
+	background-color: #000;
+	background-repeat: no-repeat;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+#loginForm {
+	position: relative;
+	top: 120px;
+}
