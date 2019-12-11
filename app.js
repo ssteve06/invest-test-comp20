@@ -199,7 +199,7 @@ app.post('/stockdata', async (req, res)=>{
     var query = {"id": 1};
     const username = req.body['username'];
     console.log(username)
-    var data = {"stock":"null"}
+    var data = {}
     var doc = checkExists(db, username, query);
     doc.then(function(value) {
         if (value != 0)
