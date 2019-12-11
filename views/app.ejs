@@ -102,7 +102,6 @@
                 }
                 
             }
-
             build_table();
             
         }
@@ -154,11 +153,11 @@
             //check = -1;
             //This check makes sure that you only update the quantity of stock
             //if you add more stock of the same company, not create a new row
-
             if (check == -1) {
                 stocks.push(comp_name);
                 prices.push(parseInt(latestPrice));
                 quants.push(parseInt(quantity));
+                names_done.push(comp_name);
             } else {
                 quants[check] = quants[check] + parseInt(quantity);
                 quantity = quants[check]; //This line updates the total closing stock value
