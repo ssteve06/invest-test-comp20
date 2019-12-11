@@ -95,6 +95,8 @@ app.post('/stock/:sym', async(req, res) => {
             // inserts new stock if doesn't exist
             db.collection(username).insertOne(
                 {
+                    "id":1,
+                    "comp_name": json.companyName,
                     "data" : Date.now(),
                     "symbol": json.symbol,
                     "latestPrice":  json.latestPrice,
@@ -160,6 +162,21 @@ app.post('/login', function(req,res) {
     }
     })
 })
+
+app.post('/stockdata', async (req, res)=>{
+    var query = {"id": 1};
+    const username = req.body['username'];
+    console.log(username)
+    var data = {"stock":"null"}
+    var doc = checkExists(db, username, query);
+    doc.then(function(value) {
+        if (value != 0)
+            res.send(value);
+        else{
+            res.send(data);
+        }
+    });
+});
 
 app.post('/app', function(req, res) {
     var message = req.flash('logged_in');

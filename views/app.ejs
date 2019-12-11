@@ -41,9 +41,38 @@
                 <div id="stock_info"> </div>
     </div>
     <script>
+
         var stocks = [];
         var prices = [];
         var quants = [];
+        $(document).ready(function(){
+            get_data_fserver();
+        })
+        //stockdata
+        async function get_data_fserver(){
+            const username = $("#username").html();
+            const call_url = '/stockdata';
+            console.log("55")
+            var data = {"username": username};
+            const response = await fetch(call_url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+            console.log("64")
+            const stock_json = await response.json();
+            console.log(stock_json);
+            /*for(stock_obj in stock_json){
+                //stock_obj = stock_json[stock_obj];
+                console.log(stock_json[stock_obj]);
+                stocks.push(stock_json[stock_obj]["comp_name"]);
+                prices.push(parseInt(stock_json[stock_obj]["latestPrice"]));
+                quants.push(parseInt(stock_json[stock_obj]["quantity"]));
+            }*/
+            
+        }
 
         //Checks if a company is already in the stocks array
         function checkCompany(company) {
@@ -103,6 +132,10 @@
                 quantity = quants[check]; //This line updates the total closing stock value
             }
 
+            build_table(quantity, latestPrice)
+        }
+
+        function build_table(quantity, latestPrice){
             var txt = "<h2> Your Stocks:</h2>" + " <table border='1'>";
             txt += "<tr><th>Stock</th><th>Price</th><th>Quantity</th></tr>";
             var total_stocks = 0.0;
@@ -123,7 +156,9 @@
             var num = latestPrice * quantity;
             var n = num.toFixed(2);
             document.getElementById("total").innerHTML = "$" + n;
+            
         }
+
     </script>
 
 </body>
