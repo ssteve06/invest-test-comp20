@@ -12,10 +12,8 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const MongoClient = require('mongodb').MongoClient;
-//const url = "mongodb+srv://demo_admin:comp20@democluster-atdke.mongodb.net/test?retryWrites=true&w=majority";
-const url = "mongodb+srv://comp20admin:comp20admin@comp20-winrz.mongodb.net/test?retryWrites=true&w=majority";
-
-//const url = 'mongodb://127.0.0.1:27017'
+const url = "mongodb+srv://demo_admin:comp20@democluster-atdke.mongodb.net/test?retryWrites=true&w=majority";
+//const url = "mongodb+srv://comp20admin:comp20admin@comp20-winrz.mongodb.net/test?retryWrites=true&w=majority";
 const dbName = 'test'
 var db
 var username;
@@ -25,11 +23,8 @@ sgMail.setApiKey(process.env.sgMail_API_KEY);
 
   MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
     if (err) return console.log(err)
-
     // Storing a reference to the database so you can use it later
     db = client.db(dbName)
-    console.log(`Connected MongoDB: ${url}`)
-    console.log(`Database: ${dbName}`)
   });
 
 app.set('public engine', 'ejs'); // set up ejs for templating;
@@ -45,9 +40,9 @@ function checkExists(db, collection, query) {
     return new Promise((resolve, reject) => {
         db.collection(collection).find(query, { $exists: true }).toArray(function (err, doc) //find if a value exists
         {
-            if (doc && doc.length) //if it does
+            if (doc && doc.length)
                 resolve(doc);
-            else // if it does not 
+            else
                 resolve(0);
         });
     });
@@ -73,15 +68,12 @@ app.get('/login', function(req,res){
 
 app.get('/stock/:sym', async (req,res) => {
 	const sym = req.params.sym;
-    console.log("stock db get request");
 });
 
 app.post('/stock/:sym', async(req, res) => {
     const sym = req.params.sym;
     const username = req.body['username'];
-    console.log(username);
 
-	console.log(sym);
 	const api_url = 'https://cloud.iexapis.com/stable/stock/'+sym+'/quote?token=pk_065b1600526c4ad5b953052a98fa7070';
 	const fetch_response = await fetch(api_url);
 	const json = await fetch_response.json();
@@ -95,46 +87,26 @@ app.post('/stock/:sym', async(req, res) => {
     // finds document in username collection
     var doc = checkExists(db, username, query);
     doc.then(function(value) {
-       // if (value == 0) {
-            // inserts new stock if doesn't exist
-            db.collection(username).insertOne(
-                {
-                    "id":1,
-                    "comp_name": json.companyName,
-                    "data" : Date.now(),
-                    "symbol": json.symbol,
-                    "latestPrice":  json.latestPrice,
-                    "buy_price": json.latestPrice,
-                    "quantity": quant
-                }
-            );
-        //}
-        /*else {
-            // adds to quantity of stock if exists
-            var new_quant = (parseInt(quant) + parseInt(value[0].quantity)).toString(10);
-            var myquery = { "symbol": key };
-            var newvalues = { $set: {"quantity": new_quant} };
-            db.collection(username).updateOne(myquery, newvalues, function(err, res) {
-                if (err) throw err;
-            });
-        }*/
+        db.collection(username).insertOne(
+            {
+                "id":1,
+                "comp_name": json.companyName,
+                "data" : Date.now(),
+                "symbol": json.symbol,
+                "latestPrice":  json.latestPrice,
+                "buy_price": json.latestPrice,
+                "quantity": quant,
+            }
+        );
     });
 });
 
 app.post('/login', function(req,res) {
     const username = req.body.username;
-/*############Jun - login validation (username and password) -- check if username and password exist ####*/
     const password = req.body.password;
-
-    console.log("Username: " + username);
-    console.log("Password: " + password);
-
-    var exists = false;
-    //var err= db.listCollections().toArray().err;
     db.listCollections().toArray(function(err, collInfos){
     var exists = false;
     // only sends user to main page when password and username is correct
-    // DOES NOT yet display "invalid username and password" when incorrect
     for (i = 0; i < collInfos.length && !exists; i++) {
         if (collInfos[i].name == username) {
             var query = {"password": password};
@@ -145,10 +117,8 @@ app.post('/login', function(req,res) {
                     req.flash('logged_in', 'true')
                     req.flash('username', username);
                     res.redirect(307, '/app')
-                   // console.log("password correct");
                 }
                 else{
-                   // console.log("pass incorrect")
                     req.flash('logged_in', 'failed')
                     res.locals.message = req.flash();
                     res.render('login.ejs');
@@ -169,12 +139,10 @@ app.post('/login', function(req,res) {
 });
 
 app.post('/update_latest', async(req,res) => {
-    var query = {"id": 1};
     const username = req.body['username'];
     var query = {"id": 1};
     var doc = checkExists(db, username, query);
     doc.then(async(value) => {
-        console.log("here")
         if(value != 0) {
             for(x in value){
                 var querysym = value[x]["symbol"];
@@ -202,7 +170,6 @@ async function get_price(sym){
 app.post('/stockdata', async (req, res)=>{
     var query = {"id": 1};
     const username = req.body['username'];
-    console.log(username)
     var data = {}
     var doc = checkExists(db, username, query);
     doc.then(function(value) {
@@ -218,7 +185,6 @@ app.post('/app', function(req, res) {
     var message = req.flash('logged_in');
     var username = req.flash('username');
     req.flash('username', username);
-    console.log("post app username: " + username)
     if(message == 'true') {
         res.locals.message = req.flash();
         res.render('app.ejs');
@@ -273,10 +239,7 @@ app.post('/newuser', function(req,res) {
     }
     exists.then(function(value) {
         if(value == 0){
-            console.log("adding new user");
-            db.createCollection(username, function(err, collection) {
-                console.log("new user " + username + " created!!!");
-            });
+            db.createCollection(username, function(err, collection) {});
             db.collection(username).insertOne(user, function(err, res) {});
             req.flash("logged_in", 'true');
             req.flash("username", username);
