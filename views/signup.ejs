@@ -27,7 +27,9 @@
     <p class="pls">Please create an account.</p>
 
     <% if (message != null && message.taken == 'true') { %>
-    <span>Username Taken or Invalid</span>
+    <div id="failMessage">
+        <span class="fail_mes" style="color: #fff">Username Taken or Invalid</span>
+    </div>
     <% } %>
 
     <div id="loginForm">
