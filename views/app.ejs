@@ -20,6 +20,9 @@
     <span id="username" style="display: none;"><%= message.username %></span>
 
     <p id="hello">Hello!</p>
+    <form action='/login' method='POST'>
+        <button type="submit" id="forgotButton" formaction='/login'>Click here to log out</button>
+    </form>
     <div id="wrap">
         <br>
         <input type="text" class="mainInput" id="stonk" name="stock" value=""
@@ -126,7 +129,7 @@
             const username = $("#username").html();
             console.log(sym);
             console.log(username);
-            document.getElementById("symbol").innerHTML = sym;
+            document.getElementById("symbol").innerHTML = sym.toUpperCase();
 
             const api_url = '/stock/' + sym;
             data = {
@@ -182,7 +185,7 @@
 
             txt += "</table>";
             document.getElementById("stock_info").innerHTML = txt;
-            document.getElementById("total").innerHTML = "$" + total_val;
+            document.getElementById("total").innerHTML = "$" + total_val.toLocaleString();
         }
 
     </script>
