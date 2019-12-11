@@ -45,9 +45,29 @@
         var stocks = [];
         var prices = [];
         var quants = [];
+        var total_val = 0;
+        var orig_price = [];
         $(document).ready(function(){
+            //update_latest();
             get_data_fserver();
+            
         })
+
+      /*  async function update_latest(){
+            const username = $("#username").html();
+            const call = '/update_latest';
+            var data = {'username': username};
+            const response = await fetch(call_url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+            const success = await response.json();
+            console.log(success);
+        }*/
+
         //stockdata
         async function get_data_fserver(){
             const username = $("#username").html();
@@ -64,13 +84,15 @@
             console.log("64")
             const stock_json = await response.json();
             console.log(stock_json);
-            /*for(stock_obj in stock_json){
+            for(stock_obj in stock_json){
                 //stock_obj = stock_json[stock_obj];
                 console.log(stock_json[stock_obj]);
                 stocks.push(stock_json[stock_obj]["comp_name"]);
                 prices.push(parseInt(stock_json[stock_obj]["latestPrice"]));
                 quants.push(parseInt(stock_json[stock_obj]["quantity"]));
-            }*/
+            }
+
+            build_table();
             
         }
 
@@ -114,12 +136,11 @@
             const json = await response.json();
             console.log(json);
 
-
             var latestPrice = json.latestPrice;
             var comp_name = json.companyName;
 
-            var check = checkCompany(comp_name);
-
+            //var check = checkCompany(comp_name);
+            check = -1;
             //This check makes sure that you only update the quantity of stock
             //if you add more stock of the same company, not create a new row
 
@@ -132,30 +153,34 @@
                 quantity = quants[check]; //This line updates the total closing stock value
             }
 
-            build_table(quantity, latestPrice)
+
+            build_table()
         }
 
-        function build_table(quantity, latestPrice){
+        function build_table(){
             var txt = "<h2> Your Stocks:</h2>" + " <table border='1'>";
-            txt += "<tr><th>Stock</th><th>Price</th><th>Quantity</th></tr>";
+            txt += "<tr><th>Stock</th><th>Price</th><th>Quantity</th><th>Total Value</th></tr>";
             var total_stocks = 0.0;
             var total_price = 0.0;
 
             for (x in stocks) {
-                txt += "<tr><td>" + stocks[x] + "</td><td>" + prices[x] + "</td><td>" + quants[x] + "</td></tr>";
-                total_stocks += quants[x];
-                total_price += prices[x];
+                txt += "<tr><td>" + stocks[x] + "</td><td>" + prices[x] + "</td><td>" + quants[x] + "</td><td>"+ prices[x] * quants[x] + "</td></tr>";
+                total_val += prices[x] * quants[x]
+                //total_stocks += quants[x];
+                //total_price += prices[x];
             }
 
 
-            txt += "<tr><td>" + "Total:" + "</td><td>" + total_price + "</td><td>" + total_stocks + "</td></tr>";
+            //txt += "<tr><td>" + "Total:" + "</td><td>" + total_price + "</td><td>" + total_stocks + "</td></tr>";
             txt += "</table>";
             document.getElementById("stock_info").innerHTML = txt;
 
             document.getElementById("latestPrice").innerHTML = "$" + latestPrice;
-            var num = latestPrice * quantity;
-            var n = num.toFixed(2);
-            document.getElementById("total").innerHTML = "$" + n;
+            //var num = latestPrice * quantity;
+            //var n = num.toFixed(2);
+            document.getElementById("total").innerHTML = "$" + total_val;
+
+
             
         }
 

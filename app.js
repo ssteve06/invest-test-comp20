@@ -12,8 +12,8 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const MongoClient = require('mongodb').MongoClient;
-const url = "mongodb+srv://demo_admin:comp20@democluster-atdke.mongodb.net/test?retryWrites=true&w=majority";
-//const url = "mongodb+srv://comp20admin:comp20admin@comp20-winrz.mongodb.net/test?retryWrites=true&w=majority";
+//const url = "mongodb+srv://demo_admin:comp20@democluster-atdke.mongodb.net/test?retryWrites=true&w=majority";
+const url = "mongodb+srv://comp20admin:comp20admin@comp20-winrz.mongodb.net/test?retryWrites=true&w=majority";
 
 //const url = 'mongodb://127.0.0.1:27017'
 const dbName = 'test'
@@ -86,12 +86,12 @@ app.post('/stock/:sym', async(req, res) => {
 	const quant = req.body['quant'];
 
 	var key = json.symbol;
-    var query = {"symbol": key};
+    var query={"symbol": key};
 
     // finds document in username collection
     var doc = checkExists(db, username, query);
     doc.then(function(value) {
-        if (value == 0) {
+       // if (value == 0) {
             // inserts new stock if doesn't exist
             db.collection(username).insertOne(
                 {
@@ -100,11 +100,12 @@ app.post('/stock/:sym', async(req, res) => {
                     "data" : Date.now(),
                     "symbol": json.symbol,
                     "latestPrice":  json.latestPrice,
+                    "buy_price": json.latestPrice,
                     "quantity": quant
                 }
             );
-        }
-        else {
+        //}
+        /*else {
             // adds to quantity of stock if exists
             var new_quant = (parseInt(quant) + parseInt(value[0].quantity)).toString(10);
             var myquery = { "symbol": key };
@@ -112,7 +113,7 @@ app.post('/stock/:sym', async(req, res) => {
             db.collection(username).updateOne(myquery, newvalues, function(err, res) {
                 if (err) throw err;
             });
-        }
+        }*/
     });
 });
 
@@ -172,6 +173,25 @@ app.post('/login', function(req,res) {
             res.send(value);
     });
 });*/
+
+/*app.post('/update_latest', async(req,res)=>{
+    var query = {"id": 1};
+    const username = req.body['username'];
+    var query={"id": "1"};
+    var doc = checkExists(db, username, query);
+    doc.then(function(value) {
+        if(value != 0) {
+            
+        }
+    }
+
+    var new_price = (parseInt())
+    var new_quant = (parseInt(quant) + parseInt(value[0].quantity)).toString(10);
+    var myquery = { "symbol": key };
+    var newvalues = { $set: {"quantity": new_quant} };
+    db.collection(username).updateOne(myquery, newvalues, function(err, res) {
+        if (err) throw err;
+})*/
 
 app.post('/stockdata', async (req, res)=>{
     var query = {"id": 1};
