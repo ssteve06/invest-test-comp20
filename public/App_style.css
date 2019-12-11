@@ -206,7 +206,7 @@ th {
 	color: #000;
 	background-color: #aaa;
 	cursor: pointer;
-	border: none;
+	border-radius: 5px;
 }
 
 #loginButton:hover {
