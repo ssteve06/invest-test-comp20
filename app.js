@@ -164,34 +164,36 @@ app.post('/login', function(req,res) {
     })
 });
 
-/*app.post('/stockdata', function(req, res) {
-    var query = {"id": 1};
-    username = 'mramer01';
-    var doc = checkExists(db, username, query);
-    doc.then(function(value) {
-        if (value != 0)
-            res.send(value);
-    });
-});*/
-
-/*app.post('/update_latest', async(req,res)=>{
+app.post('/update_latest', async(req,res) => {
     var query = {"id": 1};
     const username = req.body['username'];
-    var query={"id": "1"};
+    var query = {"id": 1};
     var doc = checkExists(db, username, query);
-    doc.then(function(value) {
+    doc.then(async(value) => {
+        console.log("here")
         if(value != 0) {
-            
+            for(x in value){
+                var querysym = value[x]["symbol"];
+                new_price = await get_price(querysym);
+                new_price = (new_price).toString();
+                querysym = {"symbol": querysym};
+                var new_val =  {$set: {"latestPrice": new_price} };
+                db.collection(username).updateOne(querysym, new_val, function(err, res) {
+                    if (err) throw err;
+                });
+            }
         }
-    }
+    })
+    res.send(query)
+})
 
-    var new_price = (parseInt())
-    var new_quant = (parseInt(quant) + parseInt(value[0].quantity)).toString(10);
-    var myquery = { "symbol": key };
-    var newvalues = { $set: {"quantity": new_quant} };
-    db.collection(username).updateOne(myquery, newvalues, function(err, res) {
-        if (err) throw err;
-})*/
+async function get_price(sym){
+    const api_url = 'https://cloud.iexapis.com/stable/stock/'+sym+'/quote?token=pk_065b1600526c4ad5b953052a98fa7070';
+    fetch_response = await fetch(api_url);
+    const json = await fetch_response.json();
+    return json.latestPrice;
+}
+
 
 app.post('/stockdata', async (req, res)=>{
     var query = {"id": 1};
