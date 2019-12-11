@@ -167,7 +167,7 @@
             var total_price = 0.0;
 
             for (x in stocks) {
-                txt += "<tr><td>" + stocks[x] + "</td><td>" + prices[x] + "</td><td>" + quants[x] + "</td><td>"+ prices[x] * quants[x] + "</td></tr>";
+                txt += "<tr><td>" + stocks[x] + "</td><td>" + "$" + prices[x].toLocaleString() + "</td><td>" + quants[x] + "</td><td>"+ "$" + (prices[x] * quants[x]).toLocaleString() + "</td></tr>";
                 total_val += prices[x] * quants[x]
                 //total_stocks += quants[x];
                 //total_price += prices[x];
