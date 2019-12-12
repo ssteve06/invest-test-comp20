@@ -20,8 +20,8 @@
     <span id="username" style="display: none;"><%= message.username %></span>
 
     <p id="hello">Hello!</p>
-    <form action='/login' method='POST'>
-        <button type="submit" id="forgotButton" formaction='/login'>Click here to log out</button>
+    <form action='/' method='GET'>
+        <button type="submit" id="forgotButton">Click here to log out</button>
     </form>
     <div id="wrap">
         <br>
@@ -69,6 +69,7 @@
             });
             const success = await response.json();
             console.log(success);
+            get_data_fserver(success);
         }
 
         //stockdata
@@ -95,10 +96,12 @@
                     stocks.push(stock_json[stock_obj]["comp_name"]);
                     prices.push(parseInt(stock_json[stock_obj]["latestPrice"]));
                     quants.push(parseInt(stock_json[stock_obj]["quantity"]));
-                    names_done.push(stock_json[stock_obj]["comp_name"])
+                    names_done.push(stock_json[stock_obj]["comp_name"]);
+                    orig_price.push(parseInt(stock_json[stock_obj]["buy_price"]) * parseInt(quants[quants.length - 1]))
                 }
                 else {
                     quants[index] += parseInt(stock_json[stock_obj]["quantity"]);
+                    orig_price[index] += parseInt(stock_json[stock_obj]["quantity"]) * parseInt(stock_json[stock_obj]["buy_price"]);
                 }
                 
             }
@@ -157,8 +160,10 @@
                 prices.push(parseInt(latestPrice));
                 quants.push(parseInt(quantity));
                 names_done.push(comp_name);
+                orig_price.push(prices[prices.length -1] * quants[quants.length - 1]);
             } else {
                 quants[check] = quants[check] + parseInt(quantity);
+                orig_price[check] += prices[check] * parseInt(quantity);
                 quantity = quants[check]; //This line updates the total closing stock value
             }
             
@@ -169,7 +174,7 @@
 
         function build_table() {
             var txt = "<h2> Your Stocks:</h2>" + " <table>";
-            txt += "<tr><th id=\"topLeft\">Stock</th><th>Market Price</th><th>Quantity</th><th id=\"topRight\">Total Value</th></tr>";
+            txt += "<tr><th id=\"topLeft\">Stock</th><th>Market Price</th><th>Quantity</th><th>Total Value</th><th id=\"topRight\">Percent Change</th></tr>";
             var total_stocks = 0.0;
             var total_price = 0.0;
 
@@ -177,7 +182,7 @@
 
             for (x in stocks) {
                 tot_quant = quants[x]
-                txt += "<tr><td>" + stocks[x] + "</td><td>"  + "$" + prices[x].toLocaleString() + "</td><td>"+ tot_quant + "</td><td>" + "$" + (prices[x] * tot_quant).toLocaleString() + "</td></tr>";
+                txt += "<tr><td>" + stocks[x] + "</td><td>"  + "$" + prices[x].toLocaleString() + "</td><td>"+ tot_quant + "</td><td>" + "$" + (prices[x] * tot_quant).toLocaleString() + "</td><td>" + (((prices[x] * tot_quant) - orig_price[x])*100/orig_price[x]).toFixed(2)  +"%</td></tr>";
                 total_val += prices[x] * tot_quant;
             }
 

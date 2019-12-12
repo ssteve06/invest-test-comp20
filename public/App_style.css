@@ -101,6 +101,8 @@ input[type=text] {
 
 #submitButton:hover {
 	background-color: #ccc;
+	transition: .5s;
+
 }
 
 #submitButton:active {
@@ -218,6 +220,7 @@ th {
 
 #loginButton:hover {
 	background-color: #ccc;
+	transition: .4s;
 }
 
 #loginButton:active {
