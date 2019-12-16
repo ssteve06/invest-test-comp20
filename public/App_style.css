@@ -282,3 +282,15 @@ th {
 	text-align: center;
 	
 }
+
+.auto_ele{
+	color: #fff;
+	display: inline-block;
+	padding-right: 5px;
+	padding-left: 5px;
+	padding-top: 5px;
+}
+
+.autocor{
+	position: relative;
+}

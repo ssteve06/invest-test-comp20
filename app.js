@@ -15,17 +15,25 @@ const MongoClient = require('mongodb').MongoClient;
 //const url = "mongodb+srv://demo_admin:comp20@democluster-atdke.mongodb.net/test?retryWrites=true&w=majority";
 const url = "mongodb+srv://comp20admin:comp20admin@comp20-winrz.mongodb.net/test?retryWrites=true&w=majority";
 const dbName = 'test'
-var db
+var db;
 var username;
+var sandp = [];
 
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.sgMail_API_KEY);
 
-  MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
+MongoClient.connect(url, { useNewUrlParser: true }, async (err, client) => {
     if (err) return console.log(err)
     // Storing a reference to the database so you can use it later
-    db = client.db(dbName)
-  });
+    db = await client.db(dbName);
+    query = {'id': '1'};
+    tempsp = await checkExists(db, 'SandP', query);
+    //tempsp = JSON.(tempsp);
+    tempsp = tempsp[0]['stocks'];
+    for(x in tempsp)
+        sandp.push(tempsp[x]['Symbol']);
+})
+
 
 app.set('public engine', 'ejs'); // set up ejs for templating;
 app.use(flash());
@@ -34,6 +42,22 @@ app.use(session({ secret: 'webprogrammingcomp20' }));
 app.listen(process.env.PORT || 3000, function() {
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
+
+
+function find_index(stocks, company) {
+    var num = -1;
+    if (stocks.length > 0) {
+        for (x in stocks) {
+            if (company == stocks[x]) {
+                num = x;
+                return num;
+            }
+        }
+    } else {
+        return -1;
+    }
+    return -1;
+}
 
 
 function checkExists(db, collection, query) {
@@ -55,6 +79,10 @@ app.get('/', function(req, res) {
 	res.locals.message = req.flash();
 	res.render('login.ejs')
 });
+
+app.post('/getsp', async(req, res)=>{
+    res.json(sandp);
+})
 
 app.get('/app', function(req, res){
     res.redirect('/');
@@ -119,9 +147,15 @@ app.post('/login', function(req,res) {
                     res.redirect(307, '/app')
                 }
                 else{
-                    req.flash('logged_in', 'failed')
-                    res.locals.message = req.flash();
-                    res.render('login.ejs');
+                    if(req.flash('logged_in') != ''){
+                        req.flash('logged_in', 'failed')
+                        res.locals.message = req.flash();
+                        res.render('login.ejs');
+                    }
+                    else{
+                        res.locals.message = req.flash();
+                        res.render('login.ejs');
+                    }
                     exists = true;
                 }
                 return exists;
@@ -138,8 +172,8 @@ app.post('/login', function(req,res) {
     })
 });
 
-app.post('/update_latest', async(req,res) => {
-    const username = req.body['username'];
+async function update_data(username){
+    //const username = req.body['username'];
     var query = {"id": 1};
     var doc = checkExists(db, username, query);
     doc.then(async(value) => {
@@ -156,7 +190,32 @@ app.post('/update_latest', async(req,res) => {
             }
         }
     })
-    res.send(query)
+};
+
+app.post('/update_latest', async(req,res) => {
+    const username = req.body['username'];
+    var query = {"id": 1};
+    var doc = checkExists(db, username, query);
+    await doc.then(async(value) => {
+        if(value != 0) {
+            var done_arr = [];
+            for(x in value){
+                var querysym = value[x]["symbol"];
+                if(find_index(done_arr, querysym) == -1){
+                    console.log(querysym)
+                    done_arr.push(querysym);
+                    new_price = await get_price(querysym);
+                    new_price = (new_price).toString();
+                    querysym = {"symbol": querysym};
+                    var new_val =  {$set: {"latestPrice": new_price} };
+                    await db.collection(username).updateMany(querysym, new_val, function(err, res) {
+                        if (err) throw err;
+                    });
+                }
+            }
+        }
+    })        
+    res.send(query);
 })
 
 async function get_price(sym){
@@ -186,6 +245,7 @@ app.post('/app', function(req, res) {
     var username = req.flash('username');
     req.flash('username', username);
     if(message == 'true') {
+        //update_data(username);
         res.locals.message = req.flash();
         res.render('app.ejs');
     }
@@ -215,6 +275,8 @@ app.post('/forgotpassword', function (req, res) {
         };
         sgMail.send(msg);
     });
+    req.flash('logged_in', 'Password Sent');
+    res.locals.message = req.flash();
     res.redirect(307, '/login');
 });
 
@@ -237,7 +299,7 @@ app.post('/newuser', function(req,res) {
             resolve(1);
         })
     }
-    exists.then(function(value) {
+    exists.then(function(value){
         if(value == 0){
             db.createCollection(username, function(err, collection) {});
             db.collection(username).insertOne(user, function(err, res) {});
