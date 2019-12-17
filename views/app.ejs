@@ -11,6 +11,56 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <title>First APP</title>
+
+    <script>
+        var temp_arr = ['ab', 'ac', 'a', 'abc', 'bad', 'this', 'abcd'];
+        const MAX_COMP = 4;
+        var SandP;
+
+        $.post('/getsp', function(data){
+           // console.log("data: " + data)
+            SandP = data;
+        })
+
+        $(document).ready(function(){
+            //console.log(temp_arr);
+            console.log(SandP);
+            //autocomplete(document.getElementById("stonk"), temp_arr);
+            autocomplete(document.getElementById("stonk"), SandP);
+        })
+
+        function find_sub(input, array){
+            var full_words = [];
+            var offset = 0;
+            while(full_words.length < MAX_COMP && offset < 4){
+                for(i in array){
+                    if(array[i].length <= offset)
+                        continue;
+                    if(input.toUpperCase() == array[i].substr(0, array[i].length - offset).toUpperCase()){
+                        full_words.push(array[i]);
+                        if(full_words.length >= MAX_COMP)
+                            break;
+                    }
+                }
+                offset++;
+            }
+            return full_words;
+        }
+
+        function autocomplete(inp, arr) {
+            inp.addEventListener("input", function(e){
+                $("#autocor").html("<span class= 'auto_ele' style='color: #000'>temp</span>")
+                var contents = $(inp).val();
+                var array = find_sub(contents, arr)
+                console.log(array);
+                for(x in array){
+                    var temp_ele = $("<span></span>").text(array[x]);
+                    $(temp_ele).attr('class', 'auto_ele');
+                    $("#autocor").append(temp_ele);
+                }
+            })
+        }
+    </script>
 </head>
 
 <body id="mainBody">
@@ -27,8 +77,8 @@
         <br>
         <input type="text" class="mainInput" id="stonk" name="stock" value=""
             placeholder="Enter Stock Symbol (e.g. aapl)">
-        <br>
-        <br>
+        <div id="autocor" class="autocor"><span class= 'auto_ele' style='color: #000'>temp</span></div>
+
         <input type="text" class="mainInput" id="quant" name="number" value="" placeholder="Enter Number of Stocks">
         <br>
         <button onclick="myFunction()" id="submitButton">Submit</button>
@@ -50,10 +100,19 @@
         var total_val = 0;
         var orig_price = [];
         var names_done = [];
+
+      
         $(document).ready(function(){
-            update_latest();
-            get_data_fserver();
-        });
+            handler();
+        })
+
+        async function handler(){
+            $("#total").html("Updating With Latest Prices");
+            await update_latest();
+            $("#total").html("Pulling Latest Data from Server");
+            await get_data_fserver();
+            await build_table();
+        }
 
         async function update_latest(){
             const username = $("#username").html();
@@ -69,7 +128,6 @@
             });
             const success = await response.json();
             console.log(success);
-            get_data_fserver(success);
         }
 
         //stockdata
@@ -88,7 +146,7 @@
             console.log("64")
             const stock_json = await response.json();
             console.log(stock_json);
-            for(stock_obj in stock_json) {
+            for(stock_obj in stock_json){
                 console.log(stock_json[stock_obj]);
                 var index = checkCompany(names_done,stock_json[stock_obj]["comp_name"]);
                 console.log("index: " + index)
@@ -103,9 +161,8 @@
                     quants[index] += parseInt(stock_json[stock_obj]["quantity"]);
                     orig_price[index] += parseInt(stock_json[stock_obj]["quantity"]) * parseInt(stock_json[stock_obj]["buy_price"]);
                 }
-                
             }
-            build_table(); 
+
         }
 
         //Checks if a company is already in the stocks array
@@ -168,11 +225,10 @@
             }
             
             document.getElementById("latestPrice").innerHTML = "$" + latestPrice.toLocaleString();
-
-            build_table()
+            build_table();
         }   
 
-        function build_table() {
+        async function build_table() {
             var txt = "<h2> Your Stocks:</h2>" + " <table>";
             txt += "<tr><th id=\"topLeft\">Stock</th><th>Market Price</th><th>Quantity</th><th>Total Value</th><th id=\"topRight\">Percent Change</th></tr>";
             var total_stocks = 0.0;
