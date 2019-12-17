@@ -84,6 +84,7 @@ app.post('/getsp', async(req, res)=>{
     tempsp = tempsp[0]['stocks'];
     for(x in tempsp)
         sandp.push(tempsp[x]['Symbol']);*/
+    await sandp;
     res.json(sandp);
 })
 

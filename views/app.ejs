@@ -27,7 +27,7 @@
         $(document).ready(async()=>{
             //console.log(temp_arr);
             await SandP;
-            
+
             console.log(SandP);
             //autocomplete(document.getElementById("stonk"), temp_arr);
             autocomplete(document.getElementById("stonk"), SandP);
@@ -138,10 +138,10 @@
       
         $(document).ready(function(){
             handler();
-            /*if(SandP == undefined)
+            if(SandP == undefined)
                 $.post('/getsp', async (data)=>{
                     SandP = await data;
-                })*/
+                })
         })
 
         async function handler(){
