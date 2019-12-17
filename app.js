@@ -80,7 +80,10 @@ app.get('/', function(req, res) {
 });
 
 app.post('/getsp', async(req, res)=>{
-    await sandp;
+    /*tempsp = await checkExists(db, 'SandP', query);
+    tempsp = tempsp[0]['stocks'];
+    for(x in tempsp)
+        sandp.push(tempsp[x]['Symbol']);*/
     res.json(sandp);
 })
 

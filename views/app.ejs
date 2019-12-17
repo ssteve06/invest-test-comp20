@@ -19,13 +19,15 @@
         var full_words = [];
         var curr_index;
 
-        $.post('/getsp', function(data){
+        $.post('/getsp', async(data) => {
            // console.log("data: " + data)
-            SandP = data;
+            SandP = await data;
         })
 
-        $(document).ready(function(){
+        $(document).ready(async()=>{
             //console.log(temp_arr);
+            await SandP;
+            
             console.log(SandP);
             //autocomplete(document.getElementById("stonk"), temp_arr);
             autocomplete(document.getElementById("stonk"), SandP);
@@ -136,10 +138,10 @@
       
         $(document).ready(function(){
             handler();
-            if(SandP == undefined)
-                $.post('/getsp', function(data){
-                    SandP = data;
-                })
+            /*if(SandP == undefined)
+                $.post('/getsp', async (data)=>{
+                    SandP = await data;
+                })*/
         })
 
         async function handler(){
