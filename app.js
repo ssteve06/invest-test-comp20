@@ -12,17 +12,14 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const MongoClient = require('mongodb').MongoClient;
-//const url = "mongodb+srv://demo_admin:comp20@democluster-atdke.mongodb.net/test?retryWrites=true&w=majority";
-const url = "mongodb+srv://comp20admin:comp20admin@comp20-winrz.mongodb.net/test?retryWrites=true&w=majority";
 const dbName = 'test'
 var db;
-var username;
 var sandp = [];
 
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.sgMail_API_KEY);
 
-MongoClient.connect(url, { useNewUrlParser: true }, async (err, client) => {
+MongoClient.connect(process.env.MONGO_URL, { useNewUrlParser: true }, async (err, client) => {
     if (err) return console.log(err)
     // Storing a reference to the database so you can use it later
     db = await client.db(dbName);
