@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const MongoClient = require('mongodb').MongoClient;
 const dbName = 'test'
 var db;
-var sandp = [];
+const sandp = [];
 
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.sgMail_API_KEY);
@@ -30,6 +30,7 @@ MongoClient.connect(process.env.MONGO_URL, { useNewUrlParser: true }, async (err
     for(x in tempsp)
         sandp.push(tempsp[x]['Symbol']);
     console.log(sandp)
+    Object.freeze(sandp);
 })
 
 

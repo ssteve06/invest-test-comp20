@@ -29,6 +29,7 @@
             console.log(SandP);
             //autocomplete(document.getElementById("stonk"), temp_arr);
             autocomplete(document.getElementById("stonk"), SandP);
+            $("#stonk").focus();
         })
 
         function find_sub(input, array){
@@ -65,12 +66,12 @@
 
             inp.addEventListener("keydown", function(e) {
                 console.log(e.keyCode);
-                if(e.keyCode == 9){
+                var asc = e.keyCode
+                if(asc == 9){
                     e.preventDefault();
-                    if(full_words.length != 0){
-                        tab_complete();
-                    }
-                }
+                    tab_complete();
+                } else if (asc >= 48 && asc <= 57)
+                    $("#quant").focus();
             })
         }
 
@@ -128,6 +129,10 @@
       
         $(document).ready(function(){
             handler();
+            if(SandP == undefined)
+                $.post('/getsp', function(data){
+                    SandP = data;
+                })
         })
 
         async function handler(){
@@ -137,7 +142,7 @@
             await get_data_fserver();
             await build_table();
         }
-
+        
         async function update_latest(){
             const username = $("#username").html();
             const call_url = '/update_latest';
@@ -208,6 +213,13 @@
         async function myFunction() {
             var sym = document.getElementById("stonk").value;
             var quantity = document.getElementById("quant").value;
+            quantity = parseInt(quantity);
+            console.log(quantity)
+            if(quantity == '' || isNaN(quantity)){
+                $("#symbol").html("Please Enter a Valid Quantity");
+                return;
+            }
+
             const username = $("#username").html();
             console.log(sym);
             console.log(username);
