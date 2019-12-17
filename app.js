@@ -29,6 +29,7 @@ MongoClient.connect(process.env.MONGO_URL, { useNewUrlParser: true }, async (err
     tempsp = tempsp[0]['stocks'];
     for(x in tempsp)
         sandp.push(tempsp[x]['Symbol']);
+    console.log(sandp)
 })
 
 
@@ -78,6 +79,7 @@ app.get('/', function(req, res) {
 });
 
 app.post('/getsp', async(req, res)=>{
+    await sandp;
     res.json(sandp);
 })
 
@@ -169,26 +171,6 @@ app.post('/login', function(req,res) {
     })
 });
 
-async function update_data(username){
-    //const username = req.body['username'];
-    var query = {"id": 1};
-    var doc = checkExists(db, username, query);
-    doc.then(async(value) => {
-        if(value != 0) {
-            for(x in value){
-                var querysym = value[x]["symbol"];
-                new_price = await get_price(querysym);
-                new_price = (new_price).toString();
-                querysym = {"symbol": querysym};
-                var new_val =  {$set: {"latestPrice": new_price} };
-                db.collection(username).updateOne(querysym, new_val, function(err, res) {
-                    if (err) throw err;
-                });
-            }
-        }
-    })
-};
-
 app.post('/update_latest', async(req,res) => {
     const username = req.body['username'];
     var query = {"id": 1};
@@ -242,7 +224,6 @@ app.post('/app', function(req, res) {
     var username = req.flash('username');
     req.flash('username', username);
     if(message == 'true') {
-        //update_data(username);
         res.locals.message = req.flash();
         res.render('app.ejs');
     }
@@ -274,7 +255,7 @@ app.post('/forgotpassword', function (req, res) {
     });
     req.flash('logged_in', 'Password Sent');
     res.locals.message = req.flash();
-    res.redirect(307, '/login');
+    res.render('login.ejs');
 });
 
 app.post('/newuser', function(req,res) {

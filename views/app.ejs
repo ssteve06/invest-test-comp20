@@ -16,6 +16,8 @@
         var temp_arr = ['ab', 'ac', 'a', 'abc', 'bad', 'this', 'abcd'];
         const MAX_COMP = 4;
         var SandP;
+        var full_words = [];
+        var curr_index;
 
         $.post('/getsp', function(data){
            // console.log("data: " + data)
@@ -30,7 +32,7 @@
         })
 
         function find_sub(input, array){
-            var full_words = [];
+            full_words = [];
             var offset = 0;
             while(full_words.length < MAX_COMP && offset < 4){
                 for(i in array){
@@ -49,6 +51,7 @@
 
         function autocomplete(inp, arr) {
             inp.addEventListener("input", function(e){
+                curr_index = 0;
                 $("#autocor").html("<span class= 'auto_ele' style='color: #000'>temp</span>")
                 var contents = $(inp).val();
                 var array = find_sub(contents, arr)
@@ -59,6 +62,27 @@
                     $("#autocor").append(temp_ele);
                 }
             })
+
+            inp.addEventListener("keydown", function(e) {
+                console.log(e.keyCode);
+                if(e.keyCode == 9){
+                    e.preventDefault();
+                    if(full_words.length != 0){
+                        tab_complete();
+                    }
+                }
+            })
+        }
+
+        function tab_complete(){
+            if(full_words.length == 0)
+                return;
+            if(curr_index >= full_words.length)
+                curr_index = 0;
+            if(curr_index < full_words.length){
+                $("#stonk").val(full_words[curr_index]);
+                curr_index++;
+            } 
         }
     </script>
 </head>

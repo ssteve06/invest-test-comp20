@@ -30,11 +30,15 @@
             <br>
             <input type="password" name="password" id="password" placeholder="Password">
             <br>
-            <% if (message != null && message.logged_in != 'N/A'){ %>
+            <% if (message != null && (message.logged_in != 'N/A' && message.logged_in != 'Password Sent')){ %>
                 <div id="failMessage">
                     <span class="fail_mes" style="color: #fff">Username or password incorrect!</span>
                 </div><br/>
-            <% }%>
+            <% } else if(message.logged_in == 'Password Sent'){ %>
+                <div id="failMessage">
+                    <span class="fail_mes" style="color: #fff">Password Sent!</span>
+                </div><br/>
+            <% } %>
           <!--  <input type="submit" name="button" value="Sign in" id="loginButton">-->
             <button type="submit" id="loginButton">Sign In</button>
             <button type="submit" id="forgotButton"  formaction="/forgotpassword">Forgot Password</button>
