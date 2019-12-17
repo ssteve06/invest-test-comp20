@@ -30,6 +30,13 @@
             //autocomplete(document.getElementById("stonk"), temp_arr);
             autocomplete(document.getElementById("stonk"), SandP);
             $("#stonk").focus();
+            $("#quant").on('keydown', function(e){
+                var asc = e.keyCode
+                console.log(asc)
+                if(asc == 13){
+                    $("#submitButton").trigger('click');
+                }
+            })
         })
 
         function find_sub(input, array){
