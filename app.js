@@ -29,8 +29,8 @@ MongoClient.connect(process.env.MONGO_URL, { useNewUrlParser: true }, async (err
     tempsp = tempsp[0]['stocks'];
     for(x in tempsp)
         sandp.push(tempsp[x]['Symbol']);
-    console.log(sandp)
     Object.freeze(sandp);
+    console.log(sandp)
 })
 
 

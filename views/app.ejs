@@ -15,18 +15,20 @@
     <script>
         var temp_arr = ['ab', 'ac', 'a', 'abc', 'bad', 'this', 'abcd'];
         const MAX_COMP = 4;
-        var SandP;
+        let SandP = [];
         var full_words = [];
         var curr_index;
 
-        $.post('/getsp', async(data) => {
-           // console.log("data: " + data)
-            SandP = await data;
-        })
+       
 
         $(document).ready(async()=>{
-            //console.log(temp_arr);
-            await SandP;
+
+            await $.post('/getsp', async(data) => {
+           // console.log("data: " + data)
+            SandP = await data;
+            })
+
+            handler();
 
             console.log(SandP);
             //autocomplete(document.getElementById("stonk"), temp_arr);
@@ -34,7 +36,7 @@
             $("#stonk").focus();
             $("#quant").on('keydown', function(e){
                 var asc = e.keyCode
-                console.log(asc)
+                //console.log(asc)
                 if(asc == 13){
                     $("#submitButton").trigger('click');
                 }
@@ -65,7 +67,7 @@
                 $("#autocor").html("<span class= 'auto_ele' style='color: #000'>temp</span>")
                 var contents = $(inp).val();
                 var array = find_sub(contents, arr)
-                console.log(array);
+                //console.log(array);
                 for(x in array){
                     var temp_ele = $("<span></span>").text(array[x]);
                     $(temp_ele).attr('class', 'auto_ele');
@@ -74,7 +76,7 @@
             })
 
             inp.addEventListener("keydown", function(e) {
-                console.log(e.keyCode);
+                //console.log(e.keyCode);
                 var asc = e.keyCode
                 if(asc == 9){
                     e.preventDefault();
@@ -135,15 +137,6 @@
         var orig_price = [];
         var names_done = [];
 
-      
-        $(document).ready(function(){
-            handler();
-            if(SandP == undefined)
-                $.post('/getsp', async (data)=>{
-                    SandP = await data;
-                })
-        })
-
         async function handler(){
             $("#total").html("Updating With Latest Prices");
             await update_latest();
@@ -156,7 +149,7 @@
             const username = $("#username").html();
             const call_url = '/update_latest';
             var data = {'username': username};
-            console.log("gonna call");
+            //console.log("gonna call");
             const response = await fetch(call_url, {
                 method: "POST",
                 headers: {
@@ -165,14 +158,14 @@
                 body: JSON.stringify(data)
             });
             const success = await response.json();
-            console.log(success);
+            //console.log(success);
         }
 
         //stockdata
         async function get_data_fserver(){
             const username = $("#username").html();
             const call_url = '/stockdata';
-            console.log("55")
+            //console.log("55")
             var data = {"username": username};
             const response = await fetch(call_url, {
                 method: "POST",
@@ -181,13 +174,13 @@
                 },
                 body: JSON.stringify(data)
             });
-            console.log("64")
+           // console.log("64")
             const stock_json = await response.json();
-            console.log(stock_json);
+            //console.log(stock_json);
             for(stock_obj in stock_json){
-                console.log(stock_json[stock_obj]);
+                //console.log(stock_json[stock_obj]);
                 var index = checkCompany(names_done,stock_json[stock_obj]["comp_name"]);
-                console.log("index: " + index)
+                //console.log("index: " + index)
                 if(index == -1) {
                     stocks.push(stock_json[stock_obj]["comp_name"]);
                     prices.push(parseInt(stock_json[stock_obj]["latestPrice"]));
@@ -223,15 +216,15 @@
             var sym = document.getElementById("stonk").value;
             var quantity = document.getElementById("quant").value;
             quantity = parseInt(quantity);
-            console.log(quantity)
+            //console.log(quantity)
             if(quantity == '' || isNaN(quantity)){
                 $("#symbol").html("Please Enter a Valid Quantity");
                 return;
             }
 
             const username = $("#username").html();
-            console.log(sym);
-            console.log(username);
+            //console.log(sym);
+            //console.log(username);
             document.getElementById("symbol").innerHTML = sym.toUpperCase();
 
             const api_url = '/stock/' + sym;
@@ -248,7 +241,7 @@
                 body: JSON.stringify(data)
             });
             const json = await response.json();
-            console.log(json);
+            //console.log(json);
 
             var latestPrice = json.latestPrice;
             var comp_name = json.companyName;
